@@ -2,18 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getNextDeadline, type ResolvedDeadline } from "@/config/deadlines";
+import { getNextDeadline, urgencyColor, type ResolvedDeadline } from "@/config/deadlines";
 
 const SESSION_KEY = "neza-seasonbar-dismissed";
 
 function formatDate(date: Date) {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-}
-
-function urgencyColor(daysAway: number) {
-  if (daysAway < 14) return "var(--color-mortgage)";
-  if (daysAway <= 30) return "var(--color-seal)";
-  return "var(--color-ink-60)";
 }
 
 export function SeasonBar() {

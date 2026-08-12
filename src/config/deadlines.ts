@@ -160,3 +160,15 @@ export function getUpcomingDeadlines(
 export function getNextDeadline(from: Date): ResolvedDeadline {
   return getUpcomingDeadlines(from, 1)[0];
 }
+
+export function urgencyColor(daysAway: number): string {
+  if (daysAway < 14) return "var(--color-mortgage)";
+  if (daysAway <= 30) return "var(--color-seal)";
+  return "var(--color-ink-60)";
+}
+
+export function urgencyTint(daysAway: number): string {
+  if (daysAway < 14) return "rgba(150, 96, 31, 0.12)";
+  if (daysAway <= 30) return "rgba(138, 106, 30, 0.12)";
+  return "rgba(110, 110, 110, 0.1)";
+}
