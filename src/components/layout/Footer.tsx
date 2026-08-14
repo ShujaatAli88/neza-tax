@@ -1,11 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { BrandMark } from "@/components/ui/BrandMark";
 import { CredentialBadges } from "@/components/content/CredentialBadges";
-import { ServiceAreaList } from "@/components/content/ServiceAreaList";
+import { MortgageDisclosure } from "@/components/compliance/MortgageDisclosure";
 import { FacebookIcon, LinkedinIcon, InstagramIcon } from "@/components/ui/SocialIcons";
 import { FOOTER_LINKS } from "@/config/nav";
-import { BUSINESS, currentHours } from "@/config/business";
+import { BUSINESS } from "@/config/business";
 import { telHref, mailtoHref } from "@/lib/contact";
 
 export function Footer() {
@@ -17,17 +17,13 @@ export function Footer() {
 
   return (
     <footer className="mt-auto bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
-      <Container className="section grid gap-10 md:grid-cols-4">
+      <Container className="section grid gap-10 md:grid-cols-3">
         <div className="md:col-span-2">
-          <Image
-            src="/images/Tax-Logo.png"
-            alt={BUSINESS.brand}
-            width={1777}
-            height={668}
-            className="mb-4 h-9 w-auto"
-          />
+          <div className="mb-4">
+            <BrandMark />
+          </div>
           <p className="prose-measure text-[var(--color-chrome-muted)]">
-            Tax, business, insurance and mortgage services from one office in Vista, CA.
+            Tax, business, insurance and mortgage services for individuals, families and businesses.
           </p>
           <address className="mt-4 not-italic text-[0.95rem] text-[var(--color-chrome-muted)]">
             {BUSINESS.address.street}
@@ -42,7 +38,7 @@ export function Footer() {
               {BUSINESS.email}
             </a>
             <br />
-            {currentHours()}
+            {BUSINESS.hours.display} · {BUSINESS.hours.note}
           </address>
 
           {socials.length > 0 && (
@@ -64,25 +60,9 @@ export function Footer() {
         </div>
 
         <nav aria-label="Footer">
-          <p className="eyebrow mb-3 !text-[var(--color-chrome-muted)]">Company</p>
+          <p className="eyebrow mb-3 !text-[var(--color-chrome-muted)]">Explore</p>
           <ul className="space-y-2">
             {FOOTER_LINKS.company.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-[var(--color-chrome-muted)] hover:text-[var(--color-eggshell)]"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Legal">
-          <p className="eyebrow mb-3 !text-[var(--color-chrome-muted)]">Legal</p>
-          <ul className="space-y-2">
-            {FOOTER_LINKS.legal.map((l) => (
               <li key={l.href}>
                 <Link
                   href={l.href}
@@ -98,7 +78,9 @@ export function Footer() {
 
       <div className="border-t border-[var(--color-chrome-2)]">
         <Container className="flex flex-col gap-3 py-6 md:flex-row md:items-center md:justify-between">
-          <ServiceAreaList onDark />
+          <p className="font-mono text-[0.85rem] text-[var(--color-chrome-muted)]">
+            Tax: California and other states · Insurance &amp; Mortgage: All of California
+          </p>
           <CredentialBadges
             onDark
             badges={[
@@ -108,11 +90,8 @@ export function Footer() {
           />
         </Container>
         <Container className="pb-6">
-          <p className="text-[0.8rem] text-[var(--color-chrome-muted)]">
-            Mortgage services offered through C2 Financial Corporation. NMLS #{BUSINESS.licenses.c2Nmls} ·
-            CA DRE #{BUSINESS.licenses.c2DreCa}.
-          </p>
-          <p className="mt-2 text-[0.8rem] text-[var(--color-chrome-muted)]">
+          <MortgageDisclosure onDark className="[&_svg]:h-6 [&_svg]:w-6" />
+          <p className="mt-4 text-[0.8rem] text-[var(--color-chrome-muted)]">
             © {new Date().getFullYear()} {BUSINESS.legalName}. All rights reserved.
           </p>
         </Container>

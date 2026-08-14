@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { BrandMark } from "@/components/ui/BrandMark";
 import { MegaMenu } from "@/components/layout/MegaMenu";
 import { MobileDrawer } from "@/components/layout/MobileDrawer";
 import { BUSINESS } from "@/config/business";
@@ -11,14 +11,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-[var(--color-chrome)]">
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link href="/" className="shrink-0">
-          <Image
-            src="/images/Tax-Logo.png"
-            alt={BUSINESS.brand}
-            width={1777}
-            height={668}
-            priority
-            className="h-9 w-auto md:h-10"
-          />
+          <BrandMark priority />
         </Link>
 
         <MegaMenu />

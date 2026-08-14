@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  Landmark,
   Check,
   Calculator,
   Umbrella,
   Home,
+  Landmark,
   FileSearch,
   PhoneCall,
   Scale,
@@ -16,21 +16,22 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ServiceCard } from "@/components/content/ServiceCard";
-import { GuaranteeBlock } from "@/components/content/GuaranteeBlock";
+import { YearRoundSupportBlock } from "@/components/content/YearRoundSupportBlock";
 import { TestimonialCard } from "@/components/content/TestimonialCard";
-import { ServiceAreaList } from "@/components/content/ServiceAreaList";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, organizationSchema } from "@/lib/schema";
 import { TESTIMONIALS } from "@/content/testimonials";
 import { getUpcomingDeadlines, urgencyColor, urgencyTint } from "@/config/deadlines";
-import { BUSINESS, currentHours } from "@/config/business";
+import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Tax, Insurance & Mortgage in Vista, CA",
   description:
-    "Tax preparation, insurance and home loans from one office in Vista. Free estimates, free e-file, and a guarantee: if you're not happy, you don't pay.",
+    "Tax preparation, insurance and home loans from Neza Financial Group — tax services, business services, insurance and mortgage loans in one place.",
 };
+
+const ACCENTS = ["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)", "var(--color-ink)"];
 
 export default function HomePage() {
   const upcoming = getUpcomingDeadlines(new Date(), 3);
@@ -84,20 +85,17 @@ export default function HomePage() {
           </div>
 
           <ul className="mt-10 flex flex-wrap gap-3">
-            {[
-              "Free estimates",
-              "E-file always free",
-              `CA Ins. Lic. ${BUSINESS.licenses.caInsurance}`,
-              "Se habla español",
-            ].map((item) => (
-              <li
-                key={item}
-                className="glass-surface flex items-center gap-1.5 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[0.78rem] text-[var(--color-chrome-muted)]"
-              >
-                <Check size={12} strokeWidth={3} style={{ color: "var(--color-seal)" }} aria-hidden="true" />
-                {item}
-              </li>
-            ))}
+            {[`CA Ins. Lic. ${BUSINESS.licenses.caInsurance}`, "Se habla español", "Year-round support"].map(
+              (item) => (
+                <li
+                  key={item}
+                  className="glass-surface flex items-center gap-1.5 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[0.78rem] text-[var(--color-chrome-muted)]"
+                >
+                  <Check size={12} strokeWidth={3} style={{ color: "var(--color-seal)" }} aria-hidden="true" />
+                  {item}
+                </li>
+              ),
+            )}
           </ul>
         </Container>
       </section>
@@ -108,10 +106,10 @@ export default function HomePage() {
           <div className="flex items-baseline justify-between">
             <Eyebrow>Upcoming deadlines</Eyebrow>
             <Link
-              href="/deadlines"
+              href="/tax-services"
               className="hidden items-center gap-1 text-[0.9rem] font-medium underline underline-offset-4 sm:inline-flex"
             >
-              All deadlines <ArrowRight size={14} aria-hidden="true" />
+              Tax services <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>
 
@@ -121,7 +119,7 @@ export default function HomePage() {
               return (
                 <Link
                   key={`${d.md}-${d.title}`}
-                  href="/deadlines"
+                  href="/tax-services"
                   className="card-surface flex items-start gap-4 p-5"
                 >
                   <span
@@ -150,24 +148,23 @@ export default function HomePage() {
           </div>
 
           <Link
-            href="/deadlines"
+            href="/tax-services"
             className="mt-6 inline-flex items-center gap-1 text-[0.9rem] font-medium underline underline-offset-4 sm:hidden"
           >
-            All deadlines <ArrowRight size={14} aria-hidden="true" />
+            Tax services <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </Container>
       </section>
 
-      {/* Primary service cards */}
+      {/* Primary service cards — all four, above the fold together */}
       <section className="band-white section relative overflow-hidden">
-        <SectionDecor colors={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"]} />
+        <SectionDecor colors={ACCENTS} />
 
         <Container className="relative z-10">
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             <ServiceCard
               color="tax"
               icon={Calculator}
-              size="large"
               title="Tax Services"
               items={[
                 "Individual Tax Returns",
@@ -176,13 +173,28 @@ export default function HomePage() {
                 "Tax Planning",
               ]}
               blurb="For anyone who files — employee, self-employed, or behind."
-              href="/tax"
+              href="/tax-services"
               linkLabel="Explore Tax Services"
+            />
+            <ServiceCard
+              color="business"
+              icon={Landmark}
+              title="Business Services"
+              items={[
+                "Bookkeeping & Accounting",
+                "Payroll",
+                "Business Tax Preparation",
+                "LLC & Corporation Formation",
+                "S-Corp Elections",
+                "Business Consulting",
+              ]}
+              blurb="For owners who'd rather run the business than the paperwork."
+              href="/business-services"
+              linkLabel="Explore Business Services"
             />
             <ServiceCard
               color="insure"
               icon={Umbrella}
-              size="large"
               title="Insurance"
               items={["Life Insurance", "Health Insurance", "Employee Benefits", "Retirement Solutions"]}
               blurb="For families and for employers covering a team."
@@ -192,7 +204,6 @@ export default function HomePage() {
             <ServiceCard
               color="mortgage"
               icon={Home}
-              size="large"
               title="Mortgage Loans"
               items={[
                 "Home Purchases",
@@ -208,84 +219,31 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Business services cross-sell band */}
-      <section className="band-ledger section relative overflow-hidden pt-0">
-        <SectionDecor colors={["var(--color-ink)", "var(--color-seal)"]} />
-
-        <Container className="relative z-10">
-          <div
-            className="card-surface relative overflow-hidden p-8 md:p-10"
-            style={{ borderTop: "4px solid var(--color-ink)" }}
-          >
-            <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-              <div className="flex items-start gap-5">
-                <span
-                  aria-hidden="true"
-                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-[var(--color-white)]"
-                  style={{ backgroundColor: "var(--color-ink)", boxShadow: "0 10px 20px -6px var(--color-ink)" }}
-                >
-                  <Landmark size={26} strokeWidth={2} />
-                </span>
-                <div>
-                  <h3>Running a business too?</h3>
-                  <p className="prose-measure mt-2 text-[var(--color-ink-60)]">
-                    Most people find us for one thing and stay for the rest — bookkeeping, payroll and
-                    business taxes are simpler when the same person set it all up.
-                  </p>
-                </div>
-              </div>
-              <Button href="/business" variant="secondary" className="shrink-0">
-                Explore business services
-                <ArrowRight size={16} aria-hidden="true" />
-              </Button>
-            </div>
-
-            <ul className="mt-7 flex flex-wrap gap-2.5 border-t border-[var(--color-rule)] pt-6">
-              {[
-                "Bookkeeping & Accounting",
-                "Payroll Services",
-                "LLC & Corporation Formation",
-                "S-Corp Elections",
-                "Business Consulting",
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-1.5 rounded-full border border-[var(--color-rule)] px-3.5 py-1.5 text-[0.82rem] font-medium text-[var(--color-ink-60)]"
-                >
-                  <Check size={13} strokeWidth={3} style={{ color: "var(--color-ink)" }} aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Container>
-      </section>
-
-      {/* Why people switch */}
+      {/* Why clients choose Neza */}
       <section className="band-white section relative overflow-hidden">
-        <SectionDecor colors={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"]} />
+        <SectionDecor colors={ACCENTS.slice(0, 3)} />
 
         <Container className="relative z-10">
-          <Eyebrow>Why people switch to Jose</Eyebrow>
+          <Eyebrow>Why clients choose Neza</Eyebrow>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {[
               {
                 color: "var(--color-tax)",
                 Icon: FileSearch,
-                title: "He finds what the last preparer missed.",
-                body: "Clients regularly come in after years with someone else and leave owing less. One self-employed client used the difference to pay off other debt.",
+                title: "Experienced, Thorough Tax Preparation",
+                body: "We take the time to review your tax situation carefully, identify potential issues and opportunities, and help you understand your return.",
               },
               {
                 color: "var(--color-insure)",
                 Icon: PhoneCall,
-                title: "He answers, and he’s fast.",
-                body: "Same-week appointments are normal here, not an exception. You’ll talk to Jose — not a call center and not a different person each year.",
+                title: "Responsive, Personal Service",
+                body: "Same-week appointments are often available. You'll work with a knowledgeable member of our team who takes the time to understand your situation—not a call center.",
               },
               {
                 color: "var(--color-mortgage)",
                 Icon: Scale,
-                title: "If you’re behind, he deals with the IRS.",
-                body: "Late returns, amended returns, notices, payment plans. Being behind is a solvable problem and it’s better to start than to wait.",
+                title: "Help When Tax Problems Arise",
+                body: "Late returns, amended returns, IRS notices, and payment options. If you're behind, we'll help you understand your options and determine the next steps.",
               },
             ].map((reason) => (
               <div key={reason.title} className="card-surface p-7" style={{ borderTop: `4px solid ${reason.color}` }}>
@@ -304,41 +262,24 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Guarantee */}
+      {/* Year-round tax support */}
       <section className="band-ledger section pt-0">
         <Container>
-          <GuaranteeBlock />
+          <YearRoundSupportBlock />
         </Container>
       </section>
 
       {/* Testimonials */}
       <section className="band-white section relative overflow-hidden">
-        <SectionDecor colors={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"]} />
+        <SectionDecor colors={ACCENTS.slice(0, 3)} />
 
         <Container className="relative z-10">
-          <div className="flex items-baseline justify-between">
-            <Eyebrow>What clients say</Eyebrow>
-            <Link href="/reviews" className="text-[0.9rem] font-medium underline underline-offset-4">
-              Read all reviews →
-            </Link>
-          </div>
+          <Eyebrow>What clients say</Eyebrow>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {TESTIMONIALS.slice(0, 3).map((t, i) => (
-              <TestimonialCard
-                key={t.author}
-                {...t}
-                color={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"][i]}
-              />
+              <TestimonialCard key={t.author} {...t} color={ACCENTS[i]} />
             ))}
           </div>
-        </Container>
-      </section>
-
-      {/* Service area */}
-      <section className="band-ledger py-8">
-        <Container>
-          <p className="eyebrow mb-2">Serving North County San Diego</p>
-          <ServiceAreaList />
         </Container>
       </section>
 
@@ -348,10 +289,7 @@ export default function HomePage() {
           <div>
             <h2 className="text-[var(--color-eggshell)]">Ready when you are.</h2>
             <address className="mt-3 not-italic text-[var(--color-chrome-muted)]">
-              {BUSINESS.address.street}, {BUSINESS.address.city}, {BUSINESS.address.state}{" "}
-              {BUSINESS.address.zip}
-              <br />
-              {currentHours()}
+              {BUSINESS.hours.display} — {BUSINESS.hours.note}
             </address>
           </div>
           <div className="flex flex-wrap gap-4">

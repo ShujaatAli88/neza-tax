@@ -32,11 +32,7 @@ export function organizationSchema() {
       latitude: BUSINESS.address.lat,
       longitude: BUSINESS.address.lng,
     },
-    openingHours: ["Mo-Fr 09:00-17:00"],
-    areaServed: BUSINESS.serviceArea.map((city) => ({
-      "@type": "City",
-      name: city,
-    })),
+    areaServed: { "@type": "State", name: "California" },
     sameAs,
     ...(BUSINESS.googleRating
       ? {
@@ -76,6 +72,8 @@ export function serviceSchema(opts: {
   url: string;
   areaServed?: string[];
 }) {
+  const regions = opts.areaServed ?? ["California"];
+
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -87,9 +85,9 @@ export function serviceSchema(opts: {
       name: BUSINESS.brand,
       telephone: BUSINESS.phoneRaw,
     },
-    areaServed: (opts.areaServed ?? BUSINESS.serviceArea).map((city) => ({
-      "@type": "City",
-      name: city,
+    areaServed: regions.map((name) => ({
+      "@type": "State",
+      name,
     })),
   };
 }

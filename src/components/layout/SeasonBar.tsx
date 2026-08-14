@@ -61,7 +61,7 @@ export function SeasonBar() {
           <span className="font-medium" style={{ color }}>
             {deadline.daysAway} day{deadline.daysAway === 1 ? "" : "s"}
           </span>
-          <Link href="/deadlines" className="ml-2 hidden underline underline-offset-2 sm:inline">
+          <Link href="/contact" className="ml-2 hidden underline underline-offset-2 sm:inline">
             Book before this →
           </Link>
         </p>
