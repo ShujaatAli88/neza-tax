@@ -1,19 +1,46 @@
-import Image from "next/image";
+"use client";
 
-// Sitewide logo. If/when a separate "Neza Financial Group" master-brand logo
-// file is supplied, this is the only place to change to bring back a
-// per-route swap (Tax Services logo on /tax-services and /business-services,
-// master-brand logo elsewhere) — don't reintroduce that split without an
-// actual second logo file to show, a text-only stand-in reads as a missing logo.
-export function BrandMark({ priority = false }: { priority?: boolean }) {
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/cn";
+
+// Per Jose's own instruction: the Neza Tax Services logo is for the Tax
+// Services and Business Services pages only. Every other page leads with the
+// Neza Financial Group master-brand logo.
+const TAX_BRAND_ROUTES = ["/tax-services", "/business-services"];
+
+export function BrandMark({
+  priority = false,
+  className,
+}: {
+  priority?: boolean;
+  className?: string;
+}) {
+  const pathname = usePathname() ?? "";
+  const useTaxLogo = TAX_BRAND_ROUTES.some((route) => pathname.startsWith(route));
+  const sizeClass = cn("h-11 w-auto md:h-12", className);
+
+  if (useTaxLogo) {
+    return (
+      <Image
+        src="/images/Tax-Logo.png"
+        alt="Neza Tax Services"
+        width={1777}
+        height={668}
+        priority={priority}
+        className={sizeClass}
+      />
+    );
+  }
+
   return (
     <Image
-      src="/images/Tax-Logo.png"
-      alt="Neza Financial Group"
-      width={1777}
-      height={668}
+      src="/images/Neza-Financial-Group-Logo.png"
+      alt="Neza Financial Group LLC"
+      width={1668}
+      height={590}
       priority={priority}
-      className="h-9 w-auto md:h-10"
+      className={sizeClass}
     />
   );
 }

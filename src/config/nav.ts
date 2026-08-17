@@ -20,27 +20,27 @@ export const NAV: NavItem[] = [
     children: [
       {
         label: "Individual Tax Preparation",
-        href: "/tax-services#individual",
+        href: "/tax-services",
         description: "W-2 employees, families, retirees and first-time filers.",
       },
       {
         label: "Business Tax Returns",
-        href: "/tax-services#business",
+        href: "/tax-services",
         description: "Schedule C through 1120-S.",
       },
       {
         label: "Self-Employed",
-        href: "/tax-services#self-employed",
+        href: "/tax-services",
         description: "1099 work, freelancing and gig income.",
       },
       {
         label: "Amended Returns",
-        href: "/tax-services#amended",
+        href: "/tax-services",
         description: "Fixed something wrong on a filed return.",
       },
       {
         label: "Prior-Year Returns",
-        href: "/tax-services#prior-year",
+        href: "/tax-services",
         description: "Behind by a year, or by several.",
       },
     ],
@@ -51,32 +51,32 @@ export const NAV: NavItem[] = [
     children: [
       {
         label: "Bookkeeping & Accounting",
-        href: "/business-services#bookkeeping",
+        href: "/business-services",
         description: "From set-it-up to fully hands-off.",
       },
       {
         label: "Payroll Services",
-        href: "/business-services#payroll",
+        href: "/business-services",
         description: "Hours in, payroll and filings out.",
       },
       {
         label: "Business Tax Preparation",
-        href: "/business-services#business-tax",
+        href: "/business-services",
         description: "The tax side of running a business.",
       },
       {
         label: "LLC & Corporation Formation",
-        href: "/business-services#formation",
+        href: "/business-services",
         description: "Entities set up right from the start.",
       },
       {
         label: "S-Corporation Elections",
-        href: "/business-services#s-corp",
+        href: "/business-services",
         description: "Form 2553 and what changes after.",
       },
       {
         label: "Business Consulting",
-        href: "/business-services#consulting",
+        href: "/business-services",
         description: "A second set of eyes on the business.",
       },
     ],
@@ -88,27 +88,27 @@ export const NAV: NavItem[] = [
     children: [
       {
         label: "Life Insurance",
-        href: "/insurance#life",
+        href: "/insurance",
         description: "Coverage for what your family depends on.",
       },
       {
         label: "Health Insurance",
-        href: "/insurance#health",
+        href: "/insurance",
         description: "Individual and Covered California plans.",
       },
       {
         label: "Employee Benefits",
-        href: "/insurance#employee-benefits",
+        href: "/insurance",
         description: "Group plans for teams of two or two hundred.",
       },
       {
         label: "Group Health",
-        href: "/insurance#group-health",
+        href: "/insurance",
         description: "Group health, dental and vision plans.",
       },
       {
         label: "Retirement Solutions",
-        href: "/insurance#retirement",
+        href: "/insurance",
         description: "From solo 401(k)s to larger group plans.",
       },
     ],
@@ -126,5 +126,9 @@ export const FOOTER_LINKS = {
     { label: "Mortgage Loans", href: "/mortgage" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
+  ],
+  legal: [
+    { label: "Privacy Policy", href: "/legal/privacy" },
+    { label: "Terms of Use", href: "/legal/terms" },
   ],
 };

@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Calculator, Landmark, Umbrella, Home, CalendarCheck } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
+import { IconBadge } from "@/components/ui/IconBadge";
 import { PageHeader } from "@/components/content/PageHeader";
+import { PhotoFeatureBlock } from "@/components/content/PhotoFeatureBlock";
 import { InsuranceDisclosure } from "@/components/compliance/InsuranceDisclosure";
 import { MortgageDisclosure } from "@/components/compliance/MortgageDisclosure";
 import { JsonLd, personSchema, breadcrumbSchema } from "@/lib/schema";
 import { ABOUT_CONTENT } from "@/content/about";
 import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
+
+const HELP_ICONS = [Calculator, Landmark, Umbrella, Home];
 
 export const metadata: Metadata = {
   title: "About Neza Financial Group",
@@ -39,20 +43,22 @@ export default function AboutPage() {
 
       <section className="band-ledger section">
         <Container>
-          <div className="card-surface p-8 md:p-10" style={{ borderTop: "4px solid var(--color-seal)" }}>
-            <h2>{ABOUT_CONTENT.approach.title}</h2>
-            <div className="prose-measure mt-4 space-y-3 text-[var(--color-ink-60)]">
-              {ABOUT_CONTENT.approach.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-          </div>
+          <PhotoFeatureBlock
+            image="/images/about-approach-photo.png"
+            imageAlt=""
+            imageWidth={563}
+            imageHeight={558}
+            color="var(--color-tax)"
+            eyebrow={ABOUT_CONTENT.approach.title}
+            title={ABOUT_CONTENT.approach.paragraphs[0]}
+            body={ABOUT_CONTENT.approach.paragraphs.slice(1)}
+          />
         </Container>
       </section>
 
       <section className="band-white section">
         <Container>
-          <p className="eyebrow mb-6">{ABOUT_CONTENT.founder.title}</p>
+          <SectionEyebrow className="mb-6">{ABOUT_CONTENT.founder.title}</SectionEyebrow>
           <div className="grid gap-8 md:grid-cols-[220px_1fr] md:items-start">
             <div className="w-full max-w-[220px]">
               <div className="card-surface overflow-hidden">
@@ -82,15 +88,16 @@ export default function AboutPage() {
 
       <section className="band-ledger section">
         <Container>
-          <Eyebrow>How We Can Help</Eyebrow>
+          <SectionEyebrow>How We Can Help</SectionEyebrow>
           <div className="mt-6 grid gap-6 md:grid-cols-2">
-            {ABOUT_CONTENT.helpItems.map((item) => (
+            {ABOUT_CONTENT.helpItems.map((item, i) => (
               <div
                 key={item.title}
-                className="card-surface p-7"
+                className="card-surface group p-7"
                 style={{ borderTop: `4px solid ${item.color}` }}
               >
-                <h3 className="text-[1.1rem]">{item.title}</h3>
+                <IconBadge icon={HELP_ICONS[i]} color={item.color} />
+                <h3 className="mt-5 text-[1.1rem]">{item.title}</h3>
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{item.body}</p>
                 <Link
                   href={item.href}
@@ -108,12 +115,18 @@ export default function AboutPage() {
 
       <section className="band-white section">
         <Container>
-          <div className="card-surface flex flex-col items-start gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10">
-            <div>
-              <h3>{ABOUT_CONTENT.visit.title}</h3>
-              <p className="mt-2 font-medium">{ABOUT_CONTENT.visit.hoursTitle}</p>
-              <p className="mt-1 text-[var(--color-ink-60)]">{BUSINESS.hours.note}</p>
-              <p className="mt-3 text-[0.8rem] text-[var(--color-ink-60)]">{ABOUT_CONTENT.visit.disclaimer}</p>
+          <div
+            className="card-surface flex flex-col items-start gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10"
+            style={{ borderTop: "4px solid var(--color-tax)" }}
+          >
+            <div className="flex items-start gap-5">
+              <IconBadge icon={CalendarCheck} color="var(--color-tax)" />
+              <div>
+                <h3>{ABOUT_CONTENT.visit.title}</h3>
+                <p className="mt-2 font-medium">{ABOUT_CONTENT.visit.hoursTitle}</p>
+                <p className="mt-1 text-[var(--color-ink-60)]">{BUSINESS.hours.note}</p>
+                <p className="mt-3 text-[0.8rem] text-[var(--color-ink-60)]">{ABOUT_CONTENT.visit.disclaimer}</p>
+              </div>
             </div>
             <div className="flex shrink-0 flex-wrap gap-4">
               <Button href="/contact">Request an Appointment</Button>
@@ -127,7 +140,7 @@ export default function AboutPage() {
 
       <section className="band-ledger py-10">
         <Container>
-          <p className="eyebrow mb-4">Licensing &amp; Disclosures</p>
+          <SectionEyebrow className="mb-4">Licensing &amp; Disclosures</SectionEyebrow>
           <InsuranceDisclosure className="mb-4" />
           <MortgageDisclosure />
         </Container>

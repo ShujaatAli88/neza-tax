@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { User, Building2, Briefcase, FileEdit, History } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
+import { IconBadge } from "@/components/ui/IconBadge";
 import { PageHeader } from "@/components/content/PageHeader";
 import { TestimonialCard } from "@/components/content/TestimonialCard";
 import { YearRoundSupportBlock } from "@/components/content/YearRoundSupportBlock";
@@ -82,16 +83,10 @@ export default function TaxServicesPage() {
               <div
                 key={s.id}
                 id={s.id}
-                className="card-surface scroll-mt-24 p-7"
+                className="card-surface group scroll-mt-24 p-7"
                 style={{ borderTop: `4px solid ${s.color}` }}
               >
-                <span
-                  aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl text-[var(--color-white)]"
-                  style={{ backgroundColor: s.color, boxShadow: `0 10px 20px -6px ${s.color}` }}
-                >
-                  <s.Icon size={22} strokeWidth={2} />
-                </span>
+                <IconBadge icon={s.Icon} color={s.color} />
                 <h3 className="mt-5 text-[1.15rem]">{s.title}</h3>
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{s.body}</p>
               </div>
@@ -109,7 +104,7 @@ export default function TaxServicesPage() {
       <section className="band-white section relative overflow-hidden">
         <SectionDecor colors={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"]} />
         <Container className="relative z-10">
-          <Eyebrow>What clients say</Eyebrow>
+          <SectionEyebrow>What clients say</SectionEyebrow>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {TESTIMONIALS.slice(0, 3).map((t, i) => (
               <TestimonialCard

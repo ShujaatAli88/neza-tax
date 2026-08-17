@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { BookOpen, Wallet, FileText, Building2, FileCheck, Lightbulb } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { IconBadge } from "@/components/ui/IconBadge";
 import { PageHeader } from "@/components/content/PageHeader";
+import { PhotoFeatureBlock } from "@/components/content/PhotoFeatureBlock";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { telHref } from "@/lib/contact";
@@ -89,16 +91,10 @@ export default function BusinessServicesPage() {
               <div
                 key={s.id}
                 id={s.id}
-                className="card-surface scroll-mt-24 p-7"
+                className="card-surface group scroll-mt-24 p-7"
                 style={{ borderTop: `4px solid ${s.color}` }}
               >
-                <span
-                  aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl text-[var(--color-white)]"
-                  style={{ backgroundColor: s.color, boxShadow: `0 10px 20px -6px ${s.color}` }}
-                >
-                  <s.Icon size={22} strokeWidth={2} />
-                </span>
+                <IconBadge icon={s.Icon} color={s.color} />
                 <h3 className="mt-5 text-[1.1rem]">{s.title}</h3>
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{s.body}</p>
               </div>
@@ -109,13 +105,17 @@ export default function BusinessServicesPage() {
 
       <section className="band-ledger section">
         <Container>
-          <div className="card-surface p-8 md:p-10">
-            <h3>Most people find us for one thing and stay for the rest.</h3>
-            <p className="prose-measure mt-3 text-[var(--color-ink-60)]">
-              If you're forming an LLC today, you'll need bookkeeping, payroll and a business
-              return before long — and it's simpler when the same person set it all up.
-            </p>
-          </div>
+          <PhotoFeatureBlock
+            image="/images/business-services-photo.png"
+            imageAlt=""
+            imageWidth={731}
+            imageHeight={694}
+            color="var(--color-ink)"
+            eyebrow="Why clients stay"
+            title="Most people find us for one thing and stay for the rest."
+            body="If you're forming an LLC today, you'll need bookkeeping, payroll and a business return before long — and it's simpler when the same person set it all up."
+            imagePosition="right"
+          />
         </Container>
       </section>
 

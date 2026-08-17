@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check, ArrowRight, type LucideIcon } from "lucide-react";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export type ServiceColor = "tax" | "insure" | "mortgage" | "business";
 
@@ -35,22 +36,18 @@ export function ServiceCard({
 
   return (
     <div
-      className="card-surface group relative flex h-full flex-col overflow-hidden p-7 transition-[border-color] duration-200 md:p-8"
-      style={{ borderTop: `4px solid ${accent}` }}
+      className="card-surface group relative flex h-full flex-col overflow-hidden p-7 md:p-8"
+      style={{
+        borderTop: `4px solid ${accent}`,
+      }}
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-[0.07] transition-opacity duration-200 group-hover:opacity-[0.12]"
-        style={{ background: `radial-gradient(120% 100% at 20% 0%, ${accent}, transparent 70%)` }}
+        className="pointer-events-none absolute inset-x-0 top-0 h-48 opacity-[0.1] transition-opacity duration-300 group-hover:opacity-[0.18]"
+        style={{ background: `radial-gradient(120% 100% at 15% 0%, ${accent}, transparent 70%)` }}
       />
 
-      <span
-        aria-hidden="true"
-        className="relative flex h-14 w-14 items-center justify-center rounded-2xl text-[var(--color-white)] transition-transform duration-200 group-hover:scale-105"
-        style={{ backgroundColor: accent, boxShadow: `0 10px 20px -6px ${accent}` }}
-      >
-        <Icon size={26} strokeWidth={2} />
-      </span>
+      <IconBadge icon={Icon} color={accent} size="lg" className="relative" />
 
       <Link href={href} className="relative mt-6 inline-flex items-center gap-1.5">
         <h3 className={size === "large" ? "text-[1.5rem]" : "text-[1.2rem]"}>{title}</h3>
@@ -74,11 +71,16 @@ export function ServiceCard({
 
       <Link
         href={href}
-        className="relative mt-6 inline-flex items-center gap-1.5 text-[0.9rem] font-semibold"
+        className="relative mt-6 inline-flex items-center gap-2 text-[0.9rem] font-semibold"
         style={{ color: accent }}
       >
         {linkLabel}
-        <ArrowRight size={16} className="transition-transform duration-150 group-hover:translate-x-1" aria-hidden="true" />
+        <span
+          className="flex h-6 w-6 items-center justify-center rounded-full transition-transform duration-200 group-hover:translate-x-1"
+          style={{ backgroundColor: `color-mix(in srgb, ${accent}, transparent 88%)` }}
+        >
+          <ArrowRight size={13} aria-hidden="true" />
+        </span>
       </Link>
     </div>
   );

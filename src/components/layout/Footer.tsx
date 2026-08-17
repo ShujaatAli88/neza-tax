@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { BrandMark } from "@/components/ui/BrandMark";
-import { CredentialBadges } from "@/components/content/CredentialBadges";
 import { MortgageDisclosure } from "@/components/compliance/MortgageDisclosure";
 import { FacebookIcon, LinkedinIcon, InstagramIcon } from "@/components/ui/SocialIcons";
 import { FOOTER_LINKS } from "@/config/nav";
@@ -19,11 +18,11 @@ export function Footer() {
     <footer className="mt-auto bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
       <Container className="section grid gap-10 md:grid-cols-3">
         <div className="md:col-span-2">
-          <div className="mb-4">
-            <BrandMark />
+          <div className="mb-5">
+            <BrandMark className="h-16 w-auto md:h-20" />
           </div>
           <p className="prose-measure text-[var(--color-chrome-muted)]">
-            Tax, business, insurance and mortgage services for individuals, families and businesses.
+            Tax Services · Business Services · Life &amp; Health Insurance · Mortgage Loans
           </p>
           <address className="mt-4 not-italic text-[0.95rem] text-[var(--color-chrome-muted)]">
             {BUSINESS.address.street}
@@ -38,7 +37,7 @@ export function Footer() {
               {BUSINESS.email}
             </a>
             <br />
-            {BUSINESS.hours.display} · {BUSINESS.hours.note}
+            Office Visits By Appointment · Se Habla Español
           </address>
 
           {socials.length > 0 && (
@@ -77,23 +76,27 @@ export function Footer() {
       </Container>
 
       <div className="border-t border-[var(--color-chrome-2)]">
-        <Container className="flex flex-col gap-3 py-6 md:flex-row md:items-center md:justify-between">
-          <p className="font-mono text-[0.85rem] text-[var(--color-chrome-muted)]">
-            Tax: California and other states · Insurance &amp; Mortgage: All of California
+        <Container className="py-8">
+          <p className="eyebrow mb-4 !text-[var(--color-chrome-muted)]">Licensing</p>
+          <p className="text-[0.85rem] text-[var(--color-eggshell)]">
+            CA Insurance Lic. #{BUSINESS.licenses.caInsurance}
           </p>
-          <CredentialBadges
-            onDark
-            badges={[
-              { label: "CA Ins. Lic.", value: BUSINESS.licenses.caInsurance },
-              { label: "NMLS", value: BUSINESS.licenses.mloNmls },
-            ]}
-          />
+          <MortgageDisclosure variant="compact" onDark className="mt-2" />
         </Container>
-        <Container className="pb-6">
-          <MortgageDisclosure onDark className="[&_svg]:h-6 [&_svg]:w-6" />
-          <p className="mt-4 text-[0.8rem] text-[var(--color-chrome-muted)]">
+      </div>
+
+      <div className="border-t border-[var(--color-chrome-2)]">
+        <Container className="flex flex-col-reverse gap-3 py-6 text-[0.8rem] text-[var(--color-chrome-muted)] md:flex-row md:items-center md:justify-between">
+          <p>
             © {new Date().getFullYear()} {BUSINESS.legalName}. All rights reserved.
           </p>
+          <nav aria-label="Legal" className="flex gap-4">
+            {FOOTER_LINKS.legal.map((l) => (
+              <Link key={l.href} href={l.href} className="hover:text-[var(--color-eggshell)]">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
         </Container>
       </div>
     </footer>

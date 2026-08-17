@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { HeartPulse, Stethoscope, Users, UsersRound, Smile, PiggyBank } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { IconBadge } from "@/components/ui/IconBadge";
 import { PageHeader } from "@/components/content/PageHeader";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { InsuranceDisclosure } from "@/components/compliance/InsuranceDisclosure";
@@ -85,16 +86,10 @@ export default function InsurancePage() {
               <div
                 key={s.id}
                 id={s.id}
-                className="card-surface scroll-mt-24 p-7"
+                className="card-surface group scroll-mt-24 p-7"
                 style={{ borderTop: `4px solid ${s.color}` }}
               >
-                <span
-                  aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl text-[var(--color-white)]"
-                  style={{ backgroundColor: s.color, boxShadow: `0 10px 20px -6px ${s.color}` }}
-                >
-                  <s.Icon size={22} strokeWidth={2} />
-                </span>
+                <IconBadge icon={s.Icon} color={s.color} />
                 <h3 className="mt-5 text-[1.1rem]">{s.title}</h3>
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{s.body}</p>
               </div>

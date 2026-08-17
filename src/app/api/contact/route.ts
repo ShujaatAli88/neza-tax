@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { BUSINESS } from "@/config/business";
 
 export const runtime = "nodejs";
@@ -28,13 +27,7 @@ function isRateLimited(ip: string): boolean {
   return timestamps.length > MAX_PER_WINDOW;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
@@ -54,7 +47,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Honeypot — real users never populate this field.
-  if (typeof body.company === "string" && body.company.trim() !== "") {
+  if (typeof body.website === "string" && body.website.trim() !== "") {
     return NextResponse.json({ ok: true });
   }
 
@@ -66,65 +59,59 @@ export async function POST(req: NextRequest) {
   const preferredTime = typeof body.preferredTime === "string" ? body.preferredTime.trim() : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
 
-  if (!name || !phone || !helpType) {
+  if (!name || !phone || !email || !helpType) {
     return NextResponse.json(
-      { ok: false, error: "Name, phone, and how we can help are required." },
+      { ok: false, error: "Name, phone, email, and how we can help are required." },
       { status: 400 },
     );
+  }
+
+  if (!EMAIL_RE.test(email)) {
+    return NextResponse.json({ ok: false, error: "Enter a valid email address." }, { status: 400 });
   }
 
   if (!HELP_OPTIONS.includes(helpType)) {
     return NextResponse.json({ ok: false, error: "Invalid selection." }, { status: 400 });
   }
 
-  const submissionHtml = `
-    <h2>New appointment request</h2>
-    <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-    <p><strong>Phone:</strong> ${escapeHtml(phone)}</p>
-    <p><strong>Email:</strong> ${escapeHtml(email || "(not provided)")}</p>
-    <p><strong>How can we help:</strong> ${escapeHtml(helpType)}</p>
-    <p><strong>Preferred date:</strong> ${escapeHtml(preferredDate || "(not provided)")}</p>
-    <p><strong>Preferred time:</strong> ${escapeHtml(preferredTime || "(not provided)")}</p>
-    <p><strong>Message:</strong><br/>${escapeHtml(message || "(none)").replace(/\n/g, "<br/>")}</p>
-  `;
-
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO_EMAIL } = process.env;
-
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !CONTACT_TO_EMAIL) {
-    // Not configured yet — don't lose the submission, but don't claim delivery either.
-    console.warn(
-      "[contact] SMTP not configured — logging submission instead of emailing.",
-      { name, phone, email, helpType, preferredDate, preferredTime, message },
-    );
-    return NextResponse.json(
-      {
-        ok: false,
-        error:
-          "Email delivery isn't configured yet. Please call us at " + BUSINESS.phone + " instead.",
-      },
-      { status: 503 },
-    );
-  }
+  // FormSubmit.co — free, no signup, no API key. The destination inbox gets a
+  // one-time "Activate Form" email on the very first submission; every
+  // submission after that is delivered automatically, forever, for free.
+  const destination = process.env.CONTACT_TO_EMAIL || BUSINESS.email;
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: Number(SMTP_PORT ?? 587),
-      secure: Number(SMTP_PORT ?? 587) === 465,
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
+    const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(destination)}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        Name: name,
+        Phone: phone,
+        Email: email,
+        "How can we help": helpType,
+        "Preferred date": preferredDate || "(not provided)",
+        "Preferred time": preferredTime || "(not provided)",
+        Message: message || "(none)",
+        _subject: `New appointment request — ${helpType}`,
+        _template: "table",
+        _captcha: "false",
+      }),
     });
 
-    await transporter.sendMail({
-      from: `"${BUSINESS.brand} Website" <${SMTP_USER}>`,
-      to: CONTACT_TO_EMAIL,
-      replyTo: email || undefined,
-      subject: `New appointment request — ${helpType}`,
-      html: submissionHtml,
-    });
+    if (!formSubmitRes.ok) {
+      const details = await formSubmitRes.text().catch(() => "");
+      console.error("[contact] FormSubmit rejected the request:", formSubmitRes.status, details);
+      return NextResponse.json(
+        { ok: false, error: "That didn't send. Please call us at " + BUSINESS.phone + " instead." },
+        { status: 502 },
+      );
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[contact] Failed to send email:", error);
+    console.error("[contact] Failed to reach FormSubmit:", error);
     return NextResponse.json(
       { ok: false, error: "That didn't send. Please call us at " + BUSINESS.phone + " instead." },
       { status: 502 },

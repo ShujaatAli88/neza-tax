@@ -8,13 +8,13 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-[var(--color-ink)] text-[var(--color-white)] shadow-[0_8px_20px_rgba(16,26,21,0.25)] hover:bg-[var(--color-chrome)] hover:-translate-y-0.5",
+    "bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-ink),white_8%),var(--color-ink))] text-[var(--color-white)] shadow-[0_10px_24px_-6px_rgba(16,26,21,0.45)] hover:shadow-[0_16px_32px_-6px_rgba(16,26,21,0.5)] hover:-translate-y-0.5",
   secondary:
-    "border-2 border-[var(--color-ink)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-white)]",
+    "border-2 border-[var(--color-ink)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-white)] hover:-translate-y-0.5",
   onChrome:
     "border-2 border-[var(--color-eggshell)] text-[var(--color-eggshell)] hover:bg-[var(--color-eggshell)] hover:text-[var(--color-chrome)]",
   invert:
-    "bg-[var(--color-eggshell)] text-[var(--color-chrome)] shadow-[0_8px_20px_rgba(0,0,0,0.25)] hover:bg-[var(--color-white)] hover:-translate-y-0.5",
+    "bg-[linear-gradient(135deg,var(--color-white),color-mix(in_srgb,var(--color-eggshell),black_4%))] text-[var(--color-chrome)] shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.4)] hover:-translate-y-0.5",
   glass:
     "glass-surface border border-white/30 text-[var(--color-eggshell)] hover:bg-white/20 hover:border-white/50",
   ghost: "rounded-none px-0 py-0 text-[var(--color-ink)] underline underline-offset-4 hover:no-underline",

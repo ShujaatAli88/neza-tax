@@ -41,47 +41,41 @@ config/content file structure above is deliberately set up so a lightweight
 CMS (or just a non-developer editing these files directly) can be dropped in
 later without restructuring anything.
 
-## Environment variables (contact form email delivery)
+## Contact form email delivery — FormSubmit
 
 The contact form (`/contact`) posts to `src/app/api/contact/route.ts`, which
-sends the submission by email via SMTP using `nodemailer`. **Until these are
-set, submissions are logged server-side but not delivered anywhere** — the
-route returns a clear error asking the visitor to call instead, rather than
-silently pretending to have sent something.
+does our own validation, honeypot check, and rate limiting, then forwards the
+submission to [FormSubmit](https://formsubmit.co) — a free, no-signup email
+relay. It delivers to whatever address `BUSINESS.email` in `business.ts`
+resolves to (currently `info@nezafinancial.com`), or a `CONTACT_TO_EMAIL`
+env var if you want to override that without touching code.
 
-Set these in Vercel → Project → Settings → Environment Variables (or a local
-`.env.local` for development):
-
-```
-SMTP_HOST=smtp.yourprovider.com
-SMTP_PORT=587
-SMTP_USER=you@yourdomain.com
-SMTP_PASS=your-smtp-password-or-app-password
-CONTACT_TO_EMAIL=info@nezafinancial.com
-```
-
-This works with any standard SMTP provider (Google Workspace, Microsoft 365,
-Zoho, the domain registrar's own mail hosting, etc.) — there's no dependency
-on a specific third-party email API or account of ours.
+**One-time activation required:** the first submission FormSubmit ever
+receives for a given inbox triggers an "Activate Form" confirmation email to
+that inbox — someone needs to open it and click the link once. After that,
+every submission is delivered automatically, indefinitely, for free, with no
+further action and no account to maintain. I already sent one test submission
+to kick this off — check `info@nezafinancial.com` for that activation email
+if it hasn't been clicked yet.
 
 ## Logo behavior
 
-The header/footer logo switches automatically by route
-(`src/components/ui/BrandMark.tsx`): the Neza Tax Services logo
+The header/footer logo (`src/components/ui/BrandMark.tsx`) switches per
+route, per Jose's instruction: the Neza Tax Services logo
 (`public/images/Tax-Logo.png`) shows on `/tax-services` and
-`/business-services`; every other page shows a text "Neza Financial Group"
-lockup, since no master-brand graphic logo file has been supplied yet. Drop a
-supplied logo file into `public/images/` and swap the text lockup in
-`BrandMark.tsx` for an `<Image>` once one exists.
+`/business-services`; the Neza Financial Group LLC master-brand logo
+(`public/images/Neza-Financial-Group-Logo.png`) shows everywhere else. Both
+files are real supplied assets — if either is ever replaced, keep the
+filenames or update the two `src` references in `BrandMark.tsx`.
 
 ## Ownership / transfer
 
 - No proprietary accounts or keys of ours are referenced anywhere in the code.
-- The only external service the code depends on is whichever SMTP provider is
-  configured above — that's the client's own account, not ours.
+- FormSubmit requires no account, no API key, and no login — it's tied only
+  to the destination email address, which is the client's own inbox.
 - To transfer: push this repo to the client's own GitHub account, then
   reconnect the Vercel project to that repo (or create a fresh Vercel project
-  from it). Re-add the environment variables above in the new Vercel project.
+  from it).
 - `nezafinancial.com` is not yet connected in this project — no DNS-affecting
   config is committed. Point the domain at the Vercel project when ready to
   go live, and see the audit report for the `nezatax.com` → `/tax-services`
@@ -93,6 +87,6 @@ supplied logo file into `public/images/` and swap the text lockup in
 - [ ] Real office address, phone, and email confirmed and set in `business.ts`
 - [ ] C2 Financial pre-qualification URL confirmed and set (`c2PrequalUrl`)
 - [ ] C2 Financial has signed off on the mortgage disclosures wording
-- [ ] SMTP environment variables set and a live test submission confirmed
+- [ ] FormSubmit activation email clicked for the destination inbox
 - [ ] San Diego County vs. all-of-California coverage language resolved (see audit report)
 - [ ] Full Lighthouse / Core Web Vitals pass once real content/photos are in

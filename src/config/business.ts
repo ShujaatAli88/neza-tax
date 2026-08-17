@@ -2,13 +2,14 @@
 // Fields marked TODO_CONFIRM use a documented default pending client sign-off — see handoff doc.
 
 export const BUSINESS = {
-  legalName: "Neza Financial Group, LLC",
+  legalName: "Neza Financial Group LLC",
   brand: "Neza Financial Group",
   owner: "Jose M. Gonzalez",
   ownerShort: "Jose",
 
   phone: "(760) 560-3160",
-  phoneRaw: "+17605603160",
+  phoneRaw: "+17605603160", // E.164 — used in schema.org structured data
+  phoneTel: "7605603160", // used in tel: links, per client spec
   email: "info@nezafinancial.com",
 
   // TODO_CONFIRM — two addresses exist across owned domains. Using the Google Business Profile /
@@ -48,29 +49,11 @@ export const BUSINESS = {
   },
 
   googleRating: null as { rating: number; count: number } | null, // TODO_CONFIRM
-  mortgageContactOverride: null as { phone: string; phoneRaw: string; email: string } | null,
-  c2PrequalUrl: "https://www.c2financialcorp.com/", // TODO_CONFIRM_URL — placeholder, not a personalized link
-
-  // Per-line coverage. Replaces the earlier North County San Diego city list —
-  // client corrected this: mortgage and insurance are licensed statewide, tax
-  // preparation serves California and other states.
-  serviceArea: {
-    tax: "California and other states",
-    insurance: "All of California",
-    mortgage: "All of California",
-  },
+  c2PrequalUrl: "https://www.c2financialcorp.com/josegonzalez",
 
   photos: {
     jose: null as string | null,
     office: null as string | null,
   },
 } as const;
-
-export function mortgageContact() {
-  return {
-    phone: BUSINESS.mortgageContactOverride?.phone ?? BUSINESS.phone,
-    phoneRaw: BUSINESS.mortgageContactOverride?.phoneRaw ?? BUSINESS.phoneRaw,
-    email: BUSINESS.mortgageContactOverride?.email ?? BUSINESS.email,
-  };
-}
 
