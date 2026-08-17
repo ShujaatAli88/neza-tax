@@ -42,7 +42,7 @@ export const BUSINESS = {
 
   social: {
     google: "https://g.page/neza-tax-services",
-    facebook: "https://www.facebook.com/nezafinancialandinsurance/", // TODO: rename page to "Neza Financial Group"
+    facebook: "https://www.facebook.com/nezataxservices",
     linkedin:
       "https://www.linkedin.com/company/neza-financial-&-insurance-services/",
     instagram: null as string | null, // TODO_CONFIRM
