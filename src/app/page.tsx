@@ -20,7 +20,7 @@ import { IconBadge } from "@/components/ui/IconBadge";
 import { ServiceCard } from "@/components/content/ServiceCard";
 import { PhotoFeatureBlock } from "@/components/content/PhotoFeatureBlock";
 import { YearRoundSupportBlock } from "@/components/content/YearRoundSupportBlock";
-import { TestimonialCard } from "@/components/content/TestimonialCard";
+import { ReviewsCarousel } from "@/components/content/ReviewsCarousel";
 import { CalendarDateBadge } from "@/components/content/CalendarDateBadge";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, organizationSchema } from "@/lib/schema";
@@ -39,28 +39,38 @@ const ACCENTS = ["var(--color-tax)", "var(--color-insure)", "var(--color-mortgag
 
 const CREDENTIALS = [
   {
-    name: "CTEC Registered",
-    blurb: "California Tax Education Council registration",
-    image: "/images/badge-ctec.jpg",
-    width: 574,
-    height: 265,
+    key: "ctec",
+    name: "CTEC Registered Tax Preparer",
+    subtext: ["California Tax Education Council"],
     color: "var(--color-tax)",
+    image: { src: "/images/badge-ctec.jpg", width: 574, height: 265 },
   },
   {
-    name: "IRS e-file Provider",
-    blurb: "Authorized to electronically file federal returns",
-    image: "/images/badge-efile.png",
-    width: 611,
-    height: 265,
+    key: "efile",
+    name: "IRS Authorized e-file Provider",
+    subtext: ["Authorized electronic filing provider"],
+    color: "var(--color-ink)",
+    image: { src: "/images/badge-efile.png", width: 611, height: 265 },
+  },
+  {
+    key: "insurance",
+    name: "Covered California Certified Insurance Agent",
+    subtext: [
+      "Neza Financial & Insurance Services, a DBA of Neza Financial Group LLC",
+      `CA Insurance Lic. #${BUSINESS.licenses.caInsurance}`,
+    ],
     color: "var(--color-insure)",
+    icon: Umbrella,
   },
   {
-    name: "IRS Registered Tax Return Preparer",
-    blurb: "IRS Registered Tax Return Preparer program",
-    image: "/images/badge-rtrp.jpg",
-    width: 329,
-    height: 108,
+    key: "mortgage",
+    name: "Mortgage Loan Originator",
+    subtext: [
+      `Jose Gonzalez · NMLS #${BUSINESS.licenses.mloNmls} · CA DRE #${BUSINESS.licenses.joseDreCa}`,
+      "Mortgage loan origination through C2 Financial Corporation",
+    ],
     color: "var(--color-mortgage)",
+    icon: Home,
   },
 ];
 
@@ -72,14 +82,15 @@ export default function HomePage() {
       <JsonLd data={organizationSchema()} />
 
       {/* Hero */}
-      <section className="relative flex items-center overflow-hidden py-14 sm:min-h-[clamp(560px,88svh,780px)] sm:py-16 md:py-20">
+      <section className="hero-viewport relative flex items-center overflow-hidden">
         <Image
           src="/images/tax-forms-planning-hero.jpg"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="hero-ambient object-cover"
+          style={{ objectPosition: "68% 25%" }}
         />
         <div
           aria-hidden="true"
@@ -89,33 +100,33 @@ export default function HomePage() {
               "linear-gradient(100deg, rgba(0,53,18,0.88) 0%, rgba(0,53,18,0.82) 45%, rgba(0,53,18,0.55) 100%)",
           }}
         />
-        <Container className="hero-animate relative">
-          <div className="flex items-center gap-3">
+        <Container className="relative">
+          <div className="hero-fade-1 flex items-center gap-3">
             <span aria-hidden="true" className="h-px w-8" style={{ backgroundColor: "var(--color-seal)" }} />
             <Eyebrow className="!text-[var(--color-chrome-muted)] !tracking-[0.18em]">
-              Tax · Insurance · Mortgage
+              Tax · Business · Insurance · Mortgage
             </Eyebrow>
           </div>
 
-          <h1 className="text-shadow-soft mt-4 max-w-3xl text-[var(--color-eggshell)]">
+          <h1 className="hero-headline text-shadow-soft max-w-3xl text-[var(--color-eggshell)]">
             Neza Financial Group
           </h1>
 
-          <p className="prose-measure mt-5 max-w-xl text-[1.2rem] leading-relaxed text-white/85">
-            Helping individuals, families, and businesses with tax preparation, insurance
-            solutions, and mortgage financing.
+          <p className="hero-fade-2 prose-measure max-w-xl text-[1.2rem] leading-relaxed text-white/85">
+            Tax, business, insurance, and mortgage services for individuals, families, and
+            business owners.
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-4">
+          <div className="hero-fade-3 flex flex-wrap gap-4">
             <Button href="/contact" variant="invert">
-              Book an appointment
+              Request an Appointment
             </Button>
             <Button href={telHref()} variant="glass">
               {BUSINESS.phone}
             </Button>
           </div>
 
-          <ul className="mt-10 flex flex-wrap gap-3">
+          <ul className="hero-fade-4 flex flex-wrap gap-3">
             {[`CA Ins. Lic. ${BUSINESS.licenses.caInsurance}`, "Se habla español", "Year-round support"].map(
               (item) => (
                 <li
@@ -146,47 +157,33 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <span aria-hidden="true" className="h-px w-8" style={{ backgroundColor: "var(--color-seal)" }} />
               <Eyebrow className="!text-[var(--color-chrome-muted)] !tracking-[0.18em]">
-                Proudly Serving the Community
+                Proudly Serving Our Community
               </Eyebrow>
             </div>
             <h2 className="mt-4 text-[var(--color-eggshell)]">Who We Are</h2>
             <p className="prose-measure mt-5 text-[1.05rem] leading-relaxed text-white/80">
-              Neza Financial Group provides Tax Services, Business Services, Insurance, and
-              Mortgage Loans to individuals, families, and business owners throughout San Diego
-              County.
+              Neza Financial Group provides <strong>Tax Services</strong>,{" "}
+              <strong>Business Services</strong>, <strong>Life &amp; Health Insurance</strong>, and{" "}
+              <strong>Mortgage Loans</strong> to individuals, families, and business owners.
             </p>
             <Button href="/about" variant="invert" className="mt-7">
               Meet Neza Financial Group
             </Button>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[380px]">
-            <div
-              aria-hidden="true"
-              className="absolute -inset-4 rounded-[26px]"
-              style={{
-                background: "color-mix(in srgb, var(--color-seal), transparent 55%)",
-                transform: "rotate(3deg)",
-              }}
+          <div className="relative mx-auto h-full min-h-[260px] w-full max-w-[380px] overflow-hidden rounded-[20px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]">
+            <Image
+              src="/images/community-tax-photo.jpg"
+              alt=""
+              fill
+              sizes="(min-width: 768px) 380px, 90vw"
+              className="object-cover"
             />
             <div
-              className="relative overflow-hidden rounded-[20px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]"
-              style={{ transform: "rotate(-2deg)" }}
-            >
-              <Image
-                src="/images/community-income-tax.jpg"
-                alt="Income tax return and calculator"
-                width={546}
-                height={324}
-                sizes="(min-width: 768px) 380px, 90vw"
-                className="h-auto w-full object-cover"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0"
-                style={{ background: "linear-gradient(0deg, rgba(0,53,18,0.4), transparent 55%)" }}
-              />
-            </div>
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(0deg, rgba(0,53,18,0.4), transparent 55%)" }}
+            />
           </div>
         </Container>
       </section>
@@ -279,7 +276,7 @@ export default function HomePage() {
               color="insure"
               icon={Umbrella}
               title="Insurance"
-              items={["Life Insurance", "Health Insurance", "Employee Benefits", "Retirement Solutions"]}
+              items={["Life Insurance", "Health Insurance", "Employee Benefits", "IRAs & Retirement Solutions"]}
               blurb="For families and for employers covering a team."
               href="/insurance"
               linkLabel="Explore Insurance"
@@ -306,10 +303,11 @@ export default function HomePage() {
       <section className="band-white section pt-0">
         <Container>
           <PhotoFeatureBlock
-            image="/images/home-trust-photo.png"
+            image="/images/home-trust-photo-v2.jpg"
             imageAlt=""
-            imageWidth={1040}
-            imageHeight={1005}
+            imageWidth={525}
+            imageHeight={350}
+            imageFit="framed"
             color="var(--color-insure)"
             eyebrow="Who we serve"
             title="Individuals, families, and business owners — all in one place."
@@ -379,10 +377,8 @@ export default function HomePage() {
               We&rsquo;d rather let the people we&rsquo;ve worked with speak for us.
             </p>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {TESTIMONIALS.slice(0, 3).map((t, i) => (
-              <TestimonialCard key={t.author} {...t} color={ACCENTS[i]} />
-            ))}
+          <div className="mt-10">
+            <ReviewsCarousel reviews={TESTIMONIALS} colors={ACCENTS} />
           </div>
         </Container>
       </section>
@@ -401,10 +397,10 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {CREDENTIALS.map((c) => (
               <div
-                key={c.name}
+                key={c.key}
                 className="card-surface group relative flex flex-col items-center overflow-hidden p-8 text-center"
                 style={{ borderTop: `4px solid ${c.color}` }}
               >
@@ -414,16 +410,27 @@ export default function HomePage() {
                   style={{ background: `radial-gradient(120% 100% at 50% 0%, ${c.color}, transparent 70%)` }}
                 />
                 <div className="relative flex h-24 w-full items-center justify-center rounded-xl bg-white">
-                  <Image
-                    src={c.image}
-                    alt={c.name}
-                    width={c.width}
-                    height={c.height}
-                    className="max-h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
-                  />
+                  {c.image ? (
+                    <Image
+                      src={c.image.src}
+                      alt={c.name}
+                      width={c.image.width}
+                      height={c.image.height}
+                      className="max-h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                    />
+                  ) : (
+                    c.icon && <IconBadge icon={c.icon} color={c.color} size="lg" />
+                  )}
                 </div>
                 <p className="relative mt-5 text-[0.98rem] font-semibold">{c.name}</p>
-                <p className="relative mt-1.5 text-[0.85rem] text-[var(--color-ink-60)]">{c.blurb}</p>
+                {c.subtext.map((line, i) => (
+                  <p
+                    key={i}
+                    className={`relative text-[0.85rem] text-[var(--color-ink-60)] ${i === 0 ? "mt-1.5" : "mt-0.5"}`}
+                  >
+                    {line}
+                  </p>
+                ))}
               </div>
             ))}
           </div>

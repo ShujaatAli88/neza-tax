@@ -84,7 +84,7 @@ export default function MortgagePage() {
             </Button>
           </div>
           <p className="mt-3 text-[0.8rem] text-[var(--color-ink-60)]">
-            Mortgage services offered through C2 Financial Corporation.
+            Mortgage loan origination services offered through C2 Financial Corporation.
           </p>
         </Container>
       </section>
@@ -120,7 +120,8 @@ export default function MortgagePage() {
           </div>
 
           <p className="mt-6 font-mono text-[0.85rem] text-[var(--color-ink-60)]">
-            Licensed to serve borrowers across all of California.
+            Mortgage loan origination services available to eligible borrowers throughout
+            California.
           </p>
         </Container>
       </section>

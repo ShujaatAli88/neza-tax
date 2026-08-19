@@ -43,6 +43,7 @@ export function SeasonBar() {
     <div
       role="status"
       aria-live="polite"
+      data-season-bar="true"
       className="flex h-10 items-center border-b border-[var(--color-rule)] bg-[var(--color-paper)]"
     >
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-6 md:px-10">

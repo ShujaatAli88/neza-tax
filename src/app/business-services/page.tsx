@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BookOpen, Wallet, FileText, Building2, FileCheck, Lightbulb } from "lucide-react";
+import { BookOpen, Wallet, Building2, FileCheck, ClipboardList, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { IconBadge } from "@/components/ui/IconBadge";
@@ -10,9 +10,9 @@ import { JsonLd, serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { telHref } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "Business Services — Bookkeeping, Payroll & LLC Formation",
+  title: "Business Services — Bookkeeping, Payroll & Business Formation",
   description:
-    "Bookkeeping, payroll, business tax preparation, LLC and corporation formation, S-corporation elections and business consulting from Neza Business Services.",
+    "Bookkeeping, payroll, business formation, S-corporation elections, business compliance support, and registered agent services from Neza Business Services.",
 };
 
 const SECTIONS = [
@@ -20,43 +20,43 @@ const SECTIONS = [
     id: "bookkeeping",
     color: "var(--color-ink)",
     Icon: BookOpen,
-    title: "Bookkeeping & Accounting",
-    body: "From getting QuickBooks set up right to a fully hands-off monthly close — we keep your books accurate and ready for tax time, not just caught up in April.",
+    title: "Bookkeeping Services",
+    body: "QuickBooks setup, ongoing bookkeeping, account reconciliation, financial reporting, and clean-up services to help keep your books accurate and organized.",
   },
   {
     id: "payroll",
     color: "var(--color-tax)",
     Icon: Wallet,
     title: "Payroll Services",
-    body: "Submit your employees' hours and we handle the rest, including quarterly returns with the IRS and EDD.",
-  },
-  {
-    id: "business-tax",
-    color: "var(--color-insure)",
-    Icon: FileText,
-    title: "Business Tax Preparation",
-    body: "The tax side of running a business — handled by the same person who does your bookkeeping and payroll, so nothing falls through the cracks between them.",
+    body: "Payroll processing, payroll tax deposits, quarterly and annual payroll tax filings, W-2s, and ongoing payroll support for businesses with employees.",
   },
   {
     id: "formation",
     color: "var(--color-mortgage)",
     Icon: Building2,
-    title: "LLC & Corporation Formation",
-    body: "Setting up an LLC or corporation the right way from day one — entity choice, paperwork, and the accounts you'll need before your first client payment.",
+    title: "Business Formation",
+    body: "Assistance with LLC and corporation formation, EIN applications, required filings, and other steps involved in getting your business established.",
   },
   {
     id: "s-corp",
     color: "var(--color-seal)",
     Icon: FileCheck,
     title: "S-Corporation Elections",
-    body: "Form 2553, the deadlines around it, and what changes about your bookkeeping and payroll once the election is in place.",
+    body: "Assistance with Form 2553, election deadlines, and understanding the payroll and tax filing requirements that come with S corporation taxation.",
   },
   {
-    id: "consulting",
+    id: "compliance",
+    color: "var(--color-insure)",
+    Icon: ClipboardList,
+    title: "Business Compliance & Support",
+    body: "Ongoing assistance with business filings, entity compliance, tax-related requirements, and other administrative needs that arise as your business grows.",
+  },
+  {
+    id: "registered-agent",
     color: "var(--color-ink)",
-    Icon: Lightbulb,
-    title: "Business Consulting",
-    body: "Entity structure reviews, growth planning, and a second set of eyes on the business — on an ongoing or as-needed basis.",
+    Icon: MapPin,
+    title: "Registered Agent Services",
+    body: "Registered agent services for California businesses, providing a reliable point of contact for official state and legal correspondence.",
   },
 ];
 
@@ -67,7 +67,7 @@ export default function BusinessServicesPage() {
         data={serviceSchema({
           name: "Business Services",
           description:
-            "Bookkeeping, payroll, business tax preparation, LLC and corporation formation, S-corp elections and consulting.",
+            "Bookkeeping, payroll, business formation, S-corp elections, business compliance support, and registered agent services.",
           url: "/business-services",
         })}
       />
@@ -79,9 +79,15 @@ export default function BusinessServicesPage() {
       />
 
       <PageHeader
-        title="Business services"
-        sub="Whether you're a two-person shop or a growing corporation, the paperwork shouldn't be the thing that slows you down."
+        title="Practical support for starting, managing, and growing your business."
+        sub="From business formation and bookkeeping to payroll and business tax services, Neza Tax Services helps business owners stay organized, compliant, and focused on running their business."
       />
+
+      <Container className="pb-6 pt-1">
+        <p className="text-[0.85rem] text-[var(--color-ink-60)]">
+          Business Services provided by Neza Tax Services, part of Neza Financial Group LLC.
+        </p>
+      </Container>
 
       <section className="band-white section relative overflow-hidden pt-0">
         <SectionDecor colors={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"]} />
@@ -112,10 +118,30 @@ export default function BusinessServicesPage() {
             imageHeight={694}
             color="var(--color-ink)"
             eyebrow="Why clients stay"
-            title="Most people find us for one thing and stay for the rest."
-            body="If you're forming an LLC today, you'll need bookkeeping, payroll and a business return before long — and it's simpler when the same person set it all up."
+            title="One place for ongoing business support."
+            body="Your business needs can change as you grow. From formation and registered agent services to bookkeeping, payroll, and ongoing compliance support, Neza Tax Services can help keep your business organized and on track."
             imagePosition="right"
           />
+        </Container>
+      </section>
+
+      <section className="band-white section">
+        <Container>
+          <div
+            className="card-surface flex flex-col items-start gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10"
+            style={{ borderTop: "4px solid var(--color-tax)" }}
+          >
+            <div>
+              <h3>Need Business Tax Preparation?</h3>
+              <p className="mt-2 text-[var(--color-ink-60)]">
+                We also prepare tax returns for LLCs, partnerships, S corporations, and C
+                corporations through Neza Tax Services.
+              </p>
+            </div>
+            <Button href="/tax-services" variant="secondary" className="shrink-0">
+              Explore Tax Services
+            </Button>
+          </div>
         </Container>
       </section>
 
@@ -124,10 +150,10 @@ export default function BusinessServicesPage() {
           <h2 className="text-[var(--color-eggshell)]">Let's talk about the business.</h2>
           <div className="flex flex-wrap gap-4">
             <Button href="/contact" variant="invert">
-              Book an appointment
+              Request an Appointment
             </Button>
             <Button href={telHref()} variant="onChrome">
-              Call us
+              Call Us
             </Button>
           </div>
         </Container>

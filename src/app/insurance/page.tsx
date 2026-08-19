@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HeartPulse, Stethoscope, Users, UsersRound, Smile, PiggyBank } from "lucide-react";
+import { HeartPulse, Stethoscope, Users, UsersRound, Smile, PiggyBank, Compass, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { IconBadge } from "@/components/ui/IconBadge";
@@ -12,7 +12,7 @@ import { telHref } from "@/lib/contact";
 export const metadata: Metadata = {
   title: "Insurance & Financial Solutions",
   description:
-    "Life insurance, health insurance, employee benefits, group health, dental & vision, and retirement solutions from Neza Financial & Insurance Services.",
+    "Life insurance, health insurance, employee benefits, group health, dental & vision, and IRAs & retirement solutions from Neza Financial & Insurance Services.",
 };
 
 const SECTIONS = [
@@ -21,42 +21,44 @@ const SECTIONS = [
     color: "var(--color-insure)",
     Icon: HeartPulse,
     title: "Life Insurance",
-    body: "Coverage for what your family depends on — term and permanent options, matched to your budget and your goals.",
+    body: "Term and permanent life insurance options designed around your coverage needs, budget, and goals.",
+    cta: "Get a Life Insurance Quote",
   },
   {
     id: "health",
     color: "var(--color-tax)",
     Icon: Stethoscope,
     title: "Health Insurance",
-    body: "Individual and family plans, including Covered California options, for coverage that fits your household.",
+    body: "Individual and family health insurance options, including Covered California plans, to help you find coverage that fits your household's needs and budget.",
+    cta: "Get a Health Insurance Quote",
   },
   {
     id: "employee-benefits",
     color: "var(--color-mortgage)",
     Icon: Users,
     title: "Employee Benefits",
-    body: "Benefits do two things at once — they keep good people from leaving, and they come with tax advantages on the business side. Available to groups as small as two.",
+    body: "Employee benefit solutions designed to help businesses offer valuable coverage to their employees, including options for small groups.",
   },
   {
     id: "group-health",
     color: "var(--color-seal)",
     Icon: UsersRound,
     title: "Group Health",
-    body: "Group health plans for teams of any size, set up and administered without the paperwork landing entirely on you.",
+    body: "Group health insurance options for small and growing businesses, with assistance selecting and setting up coverage for employees.",
   },
   {
     id: "dental-vision",
     color: "var(--color-ink)",
     Icon: Smile,
     title: "Dental & Vision",
-    body: "Dental and vision coverage alongside your health plan, for individuals or as part of a group benefits package.",
+    body: "Dental and vision coverage for individuals and families, as well as options that can be included as part of an employee benefits package.",
   },
   {
-    id: "retirement",
+    id: "iras-retirement",
     color: "var(--color-insure)",
     Icon: PiggyBank,
-    title: "Retirement Solutions",
-    body: "From solo 401(k)s to larger group retirement plans, including options that aren't tied to market risk.",
+    title: "IRAs & Retirement Solutions",
+    body: "Retirement solutions for individuals and business owners, including Traditional and Roth IRAs, SEP IRAs, SIMPLE IRAs, and other retirement options based on your goals.",
   },
 ];
 
@@ -67,7 +69,7 @@ export default function InsurancePage() {
         data={serviceSchema({
           name: "Insurance & Financial Solutions",
           description:
-            "Life, health, employee benefits, group health, dental & vision, and retirement solutions.",
+            "Life, health, employee benefits, group health, dental & vision, and IRAs & retirement solutions.",
           url: "/insurance",
         })}
       />
@@ -75,8 +77,12 @@ export default function InsurancePage() {
 
       <PageHeader
         title="Insurance & Financial Solutions"
-        sub="Coverage for your family, and for the team you're responsible for. Licensed to serve clients across all of California."
+        sub="Insurance and financial solutions for individuals, families, and businesses, with personalized guidance based on your needs and goals."
       />
+
+      <Container className="pb-6 pt-1">
+        <p className="text-[0.85rem] text-[var(--color-ink-60)]">Serving clients throughout California.</p>
+      </Container>
 
       <section className="band-white section relative overflow-hidden pt-0">
         <SectionDecor colors={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"]} />
@@ -86,14 +92,55 @@ export default function InsurancePage() {
               <div
                 key={s.id}
                 id={s.id}
-                className="card-surface group scroll-mt-24 p-7"
+                className="card-surface group flex h-full scroll-mt-24 flex-col p-7"
                 style={{ borderTop: `4px solid ${s.color}` }}
               >
                 <IconBadge icon={s.Icon} color={s.color} />
                 <h3 className="mt-5 text-[1.1rem]">{s.title}</h3>
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{s.body}</p>
+                {s.cta && (
+                  <div className="mt-auto pt-5">
+                    <Button href="/contact" variant="secondary" className="w-full">
+                      {s.cta}
+                    </Button>
+                  </div>
+                )}
               </div>
             ))}
+          </div>
+        </Container>
+      </section>
+
+      <section className="band-ledger section">
+        <Container>
+          <div className="card-surface flex flex-col gap-6 p-8 md:flex-row md:items-center md:p-10">
+            <IconBadge icon={Compass} color="var(--color-insure)" size="lg" />
+            <div>
+              <h2>Guidance Based on Your Needs</h2>
+              <p className="prose-measure mt-3 text-[var(--color-ink-60)]">
+                Insurance and retirement needs aren&rsquo;t one-size-fits-all. We take the time to
+                understand your situation, explain available options, and help you select
+                solutions that align with your needs, budget, and goals.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="band-white py-8">
+        <Container>
+          <div
+            className="card-surface flex items-start gap-4 p-6"
+            style={{ borderLeft: "4px solid var(--color-insure)" }}
+          >
+            <IconBadge icon={ShieldCheck} color="var(--color-insure)" />
+            <div>
+              <h3 className="text-[1rem]">Covered California Certified Insurance Agent</h3>
+              <p className="mt-1.5 text-[0.9rem] text-[var(--color-ink-60)]">
+                Get help comparing available health plans, understanding potential financial
+                assistance, and completing enrollment through Covered California.
+              </p>
+            </div>
           </div>
         </Container>
       </section>
@@ -106,13 +153,19 @@ export default function InsurancePage() {
 
       <section className="section bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
         <Container className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
-          <h2 className="text-[var(--color-eggshell)]">Let's find the right coverage.</h2>
-          <div className="flex flex-wrap gap-4">
+          <div>
+            <h2 className="text-[var(--color-eggshell)]">Let&rsquo;s Find the Right Solution</h2>
+            <p className="prose-measure mt-3 text-[var(--color-chrome-muted)]">
+              Whether you&rsquo;re looking for life or health insurance, employee benefits, or
+              retirement options, we&rsquo;re here to help you understand your choices.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-4">
             <Button href="/contact" variant="invert">
-              Book an appointment
+              Request an Appointment
             </Button>
             <Button href={telHref()} variant="onChrome">
-              Call us
+              Call Us
             </Button>
           </div>
         </Container>

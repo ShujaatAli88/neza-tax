@@ -24,14 +24,19 @@ const SECTIONS = [
     color: "var(--color-tax)",
     Icon: User,
     title: "Individual Tax Preparation",
-    body: "W-2 employees, families, retirees and first-time filers. We review your situation carefully, look for deductions and credits you qualify for, and walk you through the return before it's filed.",
+    body: "Federal and state individual income tax preparation for a variety of tax situations, including wages, investments, rental properties, retirement income, self-employment, and more.",
   },
   {
     id: "business",
     color: "var(--color-insure)",
     Icon: Building2,
     title: "Business Tax Returns",
-    body: "Sole proprietors through corporations — Schedule C, 1065, 1120, and 1120-S. We handle the filing and the planning conversation that should happen before it.",
+    body: (
+      <>
+        Tax preparation and filing for <strong>LLCs, partnerships, S corporations, and C
+        corporations</strong>, including applicable federal and state business entity returns.
+      </>
+    ),
   },
   {
     id: "self-employed",
@@ -45,14 +50,14 @@ const SECTIONS = [
     color: "var(--color-ink)",
     Icon: FileEdit,
     title: "Amended Returns",
-    body: "Filed something wrong, or found out later you missed a deduction. We'll review what was filed and correct it — generally within three years of the original filing.",
+    body: "Need to correct a previously filed return? We can review the original return, identify necessary changes, and prepare amended federal or state returns when appropriate.",
   },
   {
     id: "prior-year",
     color: "var(--color-seal)",
     Icon: History,
     title: "Prior-Year Returns",
-    body: "Behind by a year, or by several. Bring what you have — missing documents can often be pulled directly from the IRS — and we'll get you caught up.",
+    body: "Behind on filing? We can help prepare prior-year tax returns and work with you to get your tax filings back on track.",
   },
 ];
 
@@ -72,7 +77,7 @@ export default function TaxServicesPage() {
       <PageHeader
         eyebrow="Neza Tax Services"
         title="Professional tax preparation for individuals and businesses"
-        sub="Tax preparation for clients across California and other states."
+        sub="Serving individuals and businesses locally and remotely."
       />
 
       <section className="band-white section relative overflow-hidden pt-0">
@@ -119,13 +124,19 @@ export default function TaxServicesPage() {
 
       <section className="section bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
         <Container className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
-          <h2 className="text-[var(--color-eggshell)]">Ready to file?</h2>
-          <div className="flex flex-wrap gap-4">
+          <div>
+            <h2 className="text-[var(--color-eggshell)]">Ready to Get Started?</h2>
+            <p className="prose-measure mt-3 text-[var(--color-chrome-muted)]">
+              Whether you need help preparing your current tax return, catching up on prior-year
+              returns, amending a return, or planning ahead, Neza Tax Services is here to help.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-4">
             <Button href="/contact" variant="invert">
-              Book an appointment
+              Request an Appointment
             </Button>
             <Button href={telHref()} variant="onChrome">
-              Call us
+              Call Us
             </Button>
           </div>
         </Container>

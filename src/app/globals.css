@@ -198,6 +198,10 @@
     -webkit-backdrop-filter: blur(6px);
   }
 
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
   @keyframes rise-in {
     from {
       opacity: 0;
@@ -209,25 +213,106 @@
     }
   }
 
-  .hero-animate > * {
-    animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Hero entrance — headline is the LCP element and is deliberately excluded
+     from this sequence (no opacity/transform delay on it, ever). Margins are
+     set here rather than as Tailwind mt-* utilities so the short-viewport
+     override below (same specificity, same layer) can reliably win — a
+     components-layer rule can't out-cascade a utilities-layer class. */
+  .hero-fade-1,
+  .hero-fade-2,
+  .hero-fade-3,
+  .hero-fade-4,
+  .hero-headline {
+    animation: rise-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .hero-headline {
+    animation: none; /* LCP element: no entrance animation, ever */
+    margin-top: 1rem;
+  }
+  .hero-fade-1 {
+    animation-delay: 0ms;
+  }
+  .hero-fade-2 {
+    animation-delay: 80ms;
+    margin-top: 1.25rem;
+  }
+  .hero-fade-3 {
+    animation-delay: 160ms;
+    margin-top: 2.25rem;
+  }
+  .hero-fade-4 {
+    animation-delay: 240ms;
+    margin-top: 2.5rem;
   }
 
-  .hero-animate > *:nth-child(1) {
-    animation-delay: 0.05s;
+  @keyframes hero-slow-zoom {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.04);
+    }
   }
-  .hero-animate > *:nth-child(2) {
-    animation-delay: 0.14s;
+
+  .hero-ambient {
+    animation: hero-slow-zoom 20s ease-out both;
   }
-  .hero-animate > *:nth-child(3) {
-    animation-delay: 0.23s;
+
+  /* Full-viewport hero, offset for the sticky header (and the fixed mobile
+     action bar below lg). vh first as a fallback, svh overrides it in
+     browsers that support it — svh excludes mobile browser chrome so CTAs
+     never land under the fold. Padding lives here (not as py-* utilities)
+     for the same cascade-layer reason as the margins above. */
+  .hero-viewport {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+    min-height: calc(100vh - var(--header-h));
+    min-height: calc(100svh - var(--header-h));
   }
-  .hero-animate > *:nth-child(4) {
-    animation-delay: 0.32s;
+
+  @media (min-width: 640px) {
+    .hero-viewport {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
   }
-  .hero-animate > *:nth-child(5) {
-    animation-delay: 0.4s;
+
+  @media (min-width: 768px) {
+    .hero-viewport {
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+    }
   }
+
+  @media (max-width: 1023.98px) {
+    .hero-viewport {
+      min-height: calc(100vh - var(--header-h) - var(--mobile-bar-h));
+      min-height: calc(100svh - var(--header-h) - var(--mobile-bar-h));
+    }
+  }
+
+  /* No height-conditional override: min-height is a floor, not a ceiling.
+     With centering + sane padding-block, a short viewport just grows the
+     hero taller than the viewport (scroll to see the rest) rather than
+     clipping anything — so there's nothing to special-case here. */
+
+  /* SeasonBar (the dismissible deadline banner) sits between the sticky
+     header and <main> as a sibling — when it's present it consumes extra
+     height the hero's base calc above doesn't know about, so reserve it
+     here via the sibling selector rather than guessing at it unconditionally
+     (the banner is dismissible and not always present). */
+  [data-season-bar] ~ main .hero-viewport {
+    min-height: calc(100vh - var(--header-h) - 2.5rem);
+    min-height: calc(100svh - var(--header-h) - 2.5rem);
+  }
+
+  @media (max-width: 1023.98px) {
+    [data-season-bar] ~ main .hero-viewport {
+      min-height: calc(100vh - var(--header-h) - var(--mobile-bar-h) - 2.5rem);
+      min-height: calc(100svh - var(--header-h) - var(--mobile-bar-h) - 2.5rem);
+    }
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

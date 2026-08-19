@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Calculator, Landmark, Umbrella, Home, CalendarCheck } from "lucide-react";
+import { ArrowRight, Calculator, Landmark, Umbrella, Home } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
@@ -12,10 +12,30 @@ import { InsuranceDisclosure } from "@/components/compliance/InsuranceDisclosure
 import { MortgageDisclosure } from "@/components/compliance/MortgageDisclosure";
 import { JsonLd, personSchema, breadcrumbSchema } from "@/lib/schema";
 import { ABOUT_CONTENT } from "@/content/about";
-import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
 
 const HELP_ICONS = [Calculator, Landmark, Umbrella, Home];
+
+// Bolds the client-specified phrase within a specific founder-bio paragraph
+// (by 0-based index) without embedding markup in the plain-text content file.
+const FOUNDER_BOLD: Record<number, string> = {
+  0: "tax services, business services, life and health insurance, and mortgage lending",
+  3: "Mortgage Loan Originator with C2 Financial Corporation",
+};
+
+function renderFounderParagraph(text: string, i: number) {
+  const bold = FOUNDER_BOLD[i];
+  if (!bold) return text;
+  const idx = text.indexOf(bold);
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <strong>{bold}</strong>
+      {text.slice(idx + bold.length)}
+    </>
+  );
+}
 
 export const metadata: Metadata = {
   title: "About Neza Financial Group",
@@ -44,10 +64,11 @@ export default function AboutPage() {
       <section className="band-ledger section">
         <Container>
           <PhotoFeatureBlock
-            image="/images/about-approach-photo.png"
+            image="/images/about-approach-photo-v2.jpg"
             imageAlt=""
-            imageWidth={563}
-            imageHeight={558}
+            imageWidth={625}
+            imageHeight={350}
+            imageFit="framed"
             color="var(--color-tax)"
             eyebrow={ABOUT_CONTENT.approach.title}
             title={ABOUT_CONTENT.approach.paragraphs[0]}
@@ -79,7 +100,7 @@ export default function AboutPage() {
             </div>
             <div className="prose-measure space-y-3 text-[var(--color-ink-60)]">
               {ABOUT_CONTENT.founder.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
+                <p key={i}>{renderFounderParagraph(p, i)}</p>
               ))}
             </div>
           </div>
@@ -113,27 +134,22 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="band-white section">
-        <Container>
-          <div
-            className="card-surface flex flex-col items-start gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10"
-            style={{ borderTop: "4px solid var(--color-tax)" }}
-          >
-            <div className="flex items-start gap-5">
-              <IconBadge icon={CalendarCheck} color="var(--color-tax)" />
-              <div>
-                <h3>{ABOUT_CONTENT.visit.title}</h3>
-                <p className="mt-2 font-medium">{ABOUT_CONTENT.visit.hoursTitle}</p>
-                <p className="mt-1 text-[var(--color-ink-60)]">{BUSINESS.hours.note}</p>
-                <p className="mt-3 text-[0.8rem] text-[var(--color-ink-60)]">{ABOUT_CONTENT.visit.disclaimer}</p>
-              </div>
-            </div>
-            <div className="flex shrink-0 flex-wrap gap-4">
-              <Button href="/contact">Request an Appointment</Button>
-              <Button href={telHref()} variant="secondary">
-                Contact Us
-              </Button>
-            </div>
+      <section className="section bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
+        <Container className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-[var(--color-eggshell)]">Ready to Get Started?</h2>
+            <p className="prose-measure mt-3 text-[var(--color-chrome-muted)]">
+              Whether you need help with <strong>Tax Services</strong>, <strong>Business Services</strong>,{" "}
+              <strong>Insurance</strong>, or <strong>Mortgage Loans</strong>, we&rsquo;re here to help.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-4">
+            <Button href="/contact" variant="invert">
+              Request an Appointment
+            </Button>
+            <Button href={telHref()} variant="onChrome">
+              Contact Us
+            </Button>
           </div>
         </Container>
       </section>

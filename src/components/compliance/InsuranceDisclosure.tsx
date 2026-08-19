@@ -10,10 +10,14 @@ export function InsuranceDisclosure({
 }) {
   return (
     <p
-      className={cn("text-[0.85rem]", className)}
+      className={cn("text-[0.85rem] leading-relaxed", className)}
       style={{ color: onDark ? "var(--color-chrome-muted)" : "var(--color-ink-60)" }}
     >
-      Jose Gonzalez, California Insurance License #{BUSINESS.licenses.caInsurance}.
+      Neza Financial &amp; Insurance Services
+      <br />
+      A DBA of Neza Financial Group LLC
+      <br />
+      CA Insurance Lic. #{BUSINESS.licenses.caInsurance}
     </p>
   );
 }

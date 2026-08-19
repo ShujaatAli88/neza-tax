@@ -1,13 +1,14 @@
-// Verbatim client copy. Do not paraphrase — see audit report for the one flagged
-// conflict (this copy says "San Diego County"; other pages state all-of-California
-// / multi-state coverage per a separate client correction. Awaiting client confirmation.)
+// Verbatim client copy. Do not paraphrase. The "San Diego County" geographic
+// restriction was removed from the intro per client correction — the homepage
+// ("Who We Are" section, src/app/page.tsx) still has the same phrase and is
+// flagged separately for the client to confirm/remove.
 
 export const ABOUT_CONTENT = {
   eyebrow: "About Neza Financial Group",
   title: "Professional Guidance. Personal Service.",
 
   intro: [
-    "Neza Financial Group provides Tax Services, Business Services, Insurance, and Mortgage Loans to individuals, families, and business owners throughout San Diego County.",
+    "Neza Financial Group provides Tax Services, Business Services, Life & Health Insurance, and Mortgage Loans to individuals, families, and business owners.",
     "What began with a focus on tax preparation has grown into a broader range of services designed to help our clients with their personal, business, and financial needs.",
     "Through Neza Tax Services, we provide individual and business tax preparation along with year-round tax support. Our Business Services help business owners with bookkeeping, payroll, business formation, tax compliance, and other ongoing needs.",
     "We also help individuals, families, and businesses explore life and health insurance options. For clients purchasing, refinancing, or investing in real estate, Jose Gonzalez provides mortgage loan origination services through C2 Financial Corporation.",
@@ -25,9 +26,10 @@ export const ABOUT_CONTENT = {
   founder: {
     title: "Meet the Founder",
     name: "Jose Gonzalez",
-    role: "Founder, Neza Financial Group",
+    role: "Founder, Neza Financial Group LLC",
     paragraphs: [
       "Jose Gonzalez works with individuals, families, and business owners across tax services, business services, life and health insurance, and mortgage lending.",
+      "As a tax professional, licensed California Life & Health Insurance Agent, and Mortgage Loan Originator, Jose brings experience across multiple areas that often intersect in his clients' personal and business financial lives.",
       "His approach is centered on personal service, clear communication, and long-term client relationships. By taking the time to understand each client's situation, Jose helps clients understand their options and make informed decisions.",
       "As a Mortgage Loan Originator with C2 Financial Corporation, Jose works directly with borrowers seeking financing for home purchases, refinancing, and investment properties.",
       "As Neza Financial Group continues to grow, the company remains committed to providing the personal, responsive service that has been at the heart of the business from the beginning.",
@@ -50,8 +52,8 @@ export const ABOUT_CONTENT = {
       color: "var(--color-ink)",
     },
     {
-      title: "Insurance",
-      body: "Life and health insurance options for individuals, families, and businesses.",
+      title: "Life & Health Insurance",
+      body: "Life and health insurance, employee benefits, IRAs, and retirement solutions for individuals, families, and businesses.",
       cta: "Explore Insurance",
       href: "/insurance",
       color: "var(--color-insure)",
@@ -64,10 +66,4 @@ export const ABOUT_CONTENT = {
       color: "var(--color-mortgage)",
     },
   ],
-
-  visit: {
-    title: "Visit Neza Financial Group",
-    hoursTitle: "Office Visits By Appointment",
-    disclaimer: "Appointment requests are subject to confirmation.",
-  },
 } as const;

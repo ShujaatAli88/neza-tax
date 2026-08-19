@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { MortgageDisclosure } from "@/components/compliance/MortgageDisclosure";
+import { InsuranceDisclosure } from "@/components/compliance/InsuranceDisclosure";
 import { FacebookIcon, LinkedinIcon, InstagramIcon } from "@/components/ui/SocialIcons";
 import { FOOTER_LINKS } from "@/config/nav";
 import { BUSINESS } from "@/config/business";
@@ -16,15 +17,15 @@ export function Footer() {
 
   return (
     <footer className="mt-auto bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
-      <Container className="section grid gap-10 md:grid-cols-3">
+      <Container className="grid gap-8 py-10 sm:py-12 md:grid-cols-3 md:py-14">
         <div className="md:col-span-2">
-          <div className="mb-5">
+          <div className="mb-4">
             <BrandMark className="h-16 w-auto md:h-20" />
           </div>
           <p className="prose-measure text-[var(--color-chrome-muted)]">
             Tax Services · Business Services · Life &amp; Health Insurance · Mortgage Loans
           </p>
-          <address className="mt-4 not-italic text-[0.95rem] text-[var(--color-chrome-muted)]">
+          <address className="mt-3 not-italic text-[0.95rem] text-[var(--color-chrome-muted)]">
             {BUSINESS.address.street}
             <br />
             {BUSINESS.address.city}, {BUSINESS.address.state} {BUSINESS.address.zip}
@@ -37,11 +38,11 @@ export function Footer() {
               {BUSINESS.email}
             </a>
             <br />
-            Office Visits By Appointment · Se Habla Español
+            Office Visits By Appointment | Se Habla Español
           </address>
 
           {socials.length > 0 && (
-            <div className="mt-5 flex gap-4">
+            <div className="mt-4 flex gap-4">
               {socials.map(({ href, Icon, label }) => (
                 <a
                   key={label}
@@ -76,17 +77,15 @@ export function Footer() {
       </Container>
 
       <div className="border-t border-[var(--color-chrome-2)]">
-        <Container className="py-8">
-          <p className="eyebrow mb-4 !text-[var(--color-chrome-muted)]">Licensing</p>
-          <p className="text-[0.85rem] text-[var(--color-eggshell)]">
-            CA Insurance Lic. #{BUSINESS.licenses.caInsurance}
-          </p>
+        <Container className="py-6">
+          <p className="eyebrow mb-3 !text-[var(--color-chrome-muted)]">Licensing</p>
+          <InsuranceDisclosure onDark />
           <MortgageDisclosure variant="compact" onDark className="mt-2" />
         </Container>
       </div>
 
       <div className="border-t border-[var(--color-chrome-2)]">
-        <Container className="flex flex-col-reverse gap-3 py-6 text-[0.8rem] text-[var(--color-chrome-muted)] md:flex-row md:items-center md:justify-between">
+        <Container className="flex flex-col-reverse gap-3 py-5 text-[0.8rem] text-[var(--color-chrome-muted)] md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {BUSINESS.legalName}. All rights reserved.
           </p>
