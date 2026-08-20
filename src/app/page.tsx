@@ -261,12 +261,10 @@ export default function HomePage() {
               icon={Landmark}
               title="Business Services"
               items={[
-                "Bookkeeping & Accounting",
-                "Payroll",
-                "Business Tax Preparation",
-                "LLC & Corporation Formation",
-                "S-Corp Elections",
-                "Business Consulting",
+                "Bookkeeping Services",
+                "Payroll Services",
+                "Business Formation",
+                "Business Compliance & Support",
               ]}
               blurb="For owners who'd rather run the business than the paperwork."
               href="/business-services"
@@ -286,10 +284,10 @@ export default function HomePage() {
               icon={Home}
               title="Mortgage Loans"
               items={[
-                "Home Purchases",
-                "Refinancing",
-                "Investment Properties",
-                "Conventional · FHA · VA · Jumbo & More",
+                "Home Purchase Loans",
+                "Refinance Options",
+                "Investment Property Loans",
+                "Home Equity & Cash-Out Options",
               ]}
               blurb="Mortgage services offered through C2 Financial Corporation."
               href="/mortgage"

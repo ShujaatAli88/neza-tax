@@ -18,7 +18,7 @@ export function BrandMark({
 }) {
   const pathname = usePathname() ?? "";
   const useTaxLogo = TAX_BRAND_ROUTES.some((route) => pathname.startsWith(route));
-  const sizeClass = cn("h-11 w-auto md:h-12", className);
+  const sizeClass = cn("h-14 w-auto md:h-[60px]", className);
 
   if (useTaxLogo) {
     return (
