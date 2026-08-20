@@ -228,6 +228,8 @@
   .hero-headline {
     animation: none; /* LCP element: no entrance animation, ever */
     margin-top: 1rem;
+    font-size: clamp(2.75rem, 2rem + 4vw, 5rem);
+    letter-spacing: -0.03em;
   }
   .hero-fade-1 {
     animation-delay: 0ms;
@@ -256,6 +258,22 @@
 
   .hero-ambient {
     animation: hero-slow-zoom 20s ease-out both;
+  }
+
+  @keyframes hero-scroll-cue {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.55;
+    }
+    50% {
+      transform: translateY(6px);
+      opacity: 1;
+    }
+  }
+
+  .hero-scroll-cue {
+    animation: hero-scroll-cue 2.2s ease-in-out infinite;
   }
 
   /* Full-viewport hero, offset for the sticky header (and the fixed mobile

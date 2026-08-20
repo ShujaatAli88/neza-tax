@@ -92,12 +92,28 @@ export default function HomePage() {
           className="hero-ambient object-cover"
           style={{ objectPosition: "68% 25%" }}
         />
+        {/* Directional duotone grade — densest behind the text column, clearing
+            toward the right so the photo (and the "Need help?" note) actually
+            reads, plus a soft vignette so the frame feels art-directed. */}
         <div
           aria-hidden="true"
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(100deg, rgba(0,53,18,0.88) 0%, rgba(0,53,18,0.82) 45%, rgba(0,53,18,0.55) 100%)",
+              "linear-gradient(100deg, rgba(0,53,18,0.92) 0%, rgba(0,53,18,0.86) 38%, rgba(0,53,18,0.4) 72%, rgba(0,53,18,0.22) 100%)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 mix-blend-color"
+          style={{ backgroundColor: "var(--color-chrome-2)", opacity: 0.35 }}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(120% 100% at 50% 100%, rgba(0,20,7,0.45) 0%, transparent 55%)",
           }}
         />
         <Container className="relative">
@@ -126,24 +142,52 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <ul className="hero-fade-4 flex flex-wrap gap-3">
-            {[`CA Ins. Lic. ${BUSINESS.licenses.caInsurance}`, "Se habla español", "Year-round support"].map(
-              (item) => (
-                <li
-                  key={item}
-                  className="glass-surface flex items-center gap-1.5 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[0.78rem] text-[var(--color-chrome-muted)]"
-                >
-                  <Check size={12} strokeWidth={3} style={{ color: "var(--color-seal)" }} aria-hidden="true" />
-                  {item}
-                </li>
-              ),
-            )}
-          </ul>
+          <div className="hero-fade-4">
+            <span
+              aria-hidden="true"
+              className="mb-4 block h-px w-8"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--color-seal), color-mix(in srgb, var(--color-seal), transparent 70%))",
+              }}
+            />
+            <ul className="flex flex-wrap gap-3">
+              {[`CA Ins. Lic. ${BUSINESS.licenses.caInsurance}`, "Se habla español", "Year-round support"].map(
+                (item) => (
+                  <li
+                    key={item}
+                    className="glass-surface flex items-center gap-1.5 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[0.78rem] text-[var(--color-chrome-muted)]"
+                  >
+                    <Check size={12} strokeWidth={3} style={{ color: "var(--color-seal)" }} aria-hidden="true" />
+                    {item}
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
         </Container>
+
+        <a
+          href="#community"
+          className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 rounded-full text-[var(--color-chrome-muted)] hover:text-[var(--color-eggshell)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-eggshell)] sm:block"
+        >
+          <span className="sr-only">Scroll to learn more</span>
+          <span
+            aria-hidden="true"
+            className="hero-scroll-cue flex h-8 w-8 items-center justify-center rounded-full border border-white/20"
+          >
+            <svg width="12" height="7" viewBox="0 0 12 7" aria-hidden="true">
+              <path d="M1 1l5 5 5-5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            </svg>
+          </span>
+        </a>
       </section>
 
       {/* Proudly serving the community */}
-      <section className="relative overflow-hidden bg-[var(--color-chrome)] py-16 text-[var(--color-eggshell)] sm:py-20">
+      <section
+        id="community"
+        className="relative scroll-mt-16 overflow-hidden bg-[var(--color-chrome)] py-16 text-[var(--color-eggshell)] sm:py-20"
+      >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
