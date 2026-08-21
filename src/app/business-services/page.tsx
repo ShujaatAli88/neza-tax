@@ -49,7 +49,7 @@ const SECTIONS = [
     color: "var(--color-insure)",
     Icon: ClipboardList,
     title: "Business Compliance & Support",
-    body: "Ongoing assistance with business filings, entity compliance, tax-related requirements, and other administrative needs that arise as your business grows.",
+    body: "Ongoing assistance with business filings, including Statement of Information filings, entity compliance, tax-related requirements, and other administrative needs that arise as your business grows.",
   },
   {
     id: "registered-agent",
@@ -80,7 +80,7 @@ export default function BusinessServicesPage() {
 
       <PageHeader
         title="Practical support for starting, managing, and growing your business."
-        sub="From business formation and bookkeeping to payroll and business tax services, Neza Tax Services helps business owners stay organized, compliant, and focused on running their business."
+        sub="From business formation and bookkeeping to payroll and business compliance, Neza Tax Services helps business owners stay organized, compliant, and focused on running their business."
       />
 
       <Container className="pb-6 pt-1">
@@ -112,12 +112,13 @@ export default function BusinessServicesPage() {
       <section className="band-ledger section">
         <Container>
           <PhotoFeatureBlock
-            image="/images/business-services-photo.png"
+            image="/images/business-services-support-photo.jpg"
             imageAlt=""
-            imageWidth={731}
-            imageHeight={694}
+            imageWidth={1600}
+            imageHeight={900}
+            imageFit="framed"
             color="var(--color-ink)"
-            eyebrow="Why clients stay"
+            eyebrow="Ongoing Business Support"
             title="One place for ongoing business support."
             body="Your business needs can change as you grow. From formation and registered agent services to bookkeeping, payroll, and ongoing compliance support, Neza Tax Services can help keep your business organized and on track."
             imagePosition="right"

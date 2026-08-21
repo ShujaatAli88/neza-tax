@@ -24,6 +24,9 @@ export default function PrivacyPolicyPage() {
 
       <section className="band-white section pt-0">
         <Container>
+          <p className="prose-measure mb-8 text-[0.9rem] text-[var(--color-ink-60)]">
+            Last Updated: August 20, 2026
+          </p>
           <LegalSections sections={PRIVACY_SECTIONS} />
         </Container>
       </section>

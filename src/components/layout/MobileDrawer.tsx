@@ -106,6 +106,15 @@ export function MobileDrawer() {
             })}
           </nav>
           <div className="flex flex-col gap-3 px-6 py-6">
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              title="Client Portal — coming soon"
+              className="cursor-not-allowed rounded-[var(--radius-pill)] border-2 border-[var(--color-ink)] px-7 py-3.5 text-[0.95rem] font-semibold text-[var(--color-ink)] opacity-50"
+            >
+              Client Portal
+            </button>
             <Button href={telHref()} variant="secondary">
               {BUSINESS.phone}
             </Button>

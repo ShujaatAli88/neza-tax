@@ -46,14 +46,14 @@ export const ABOUT_CONTENT = {
     },
     {
       title: "Business Services",
-      body: "Bookkeeping, payroll, business formation, S-Corporation elections, business tax services, and ongoing support for business owners.",
+      body: "Bookkeeping, payroll, business formation, S-Corporation elections, business compliance, and ongoing support for business owners.",
       cta: "Explore Business Services",
       href: "/business-services",
       color: "var(--color-ink)",
     },
     {
       title: "Life & Health Insurance",
-      body: "Life and health insurance, employee benefits, IRAs, and retirement solutions for individuals, families, and businesses.",
+      body: "Life Insurance, Health Insurance, Dental & Vision, Employee Benefits, and IRAs & Retirement Solutions for individuals, families, and businesses.",
       cta: "Explore Insurance",
       href: "/insurance",
       color: "var(--color-insure)",

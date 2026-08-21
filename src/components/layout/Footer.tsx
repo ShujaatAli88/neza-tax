@@ -20,7 +20,7 @@ export function Footer() {
       <Container className="grid gap-8 py-10 sm:py-12 md:grid-cols-3 md:py-14">
         <div className="md:col-span-2">
           <div className="mb-4">
-            <BrandMark className="h-16 w-auto md:h-20" />
+            <BrandMark className="h-20 w-auto md:h-24" />
           </div>
           <p className="prose-measure text-[var(--color-chrome-muted)]">
             Tax Services · Business Services · Life &amp; Health Insurance · Mortgage Loans

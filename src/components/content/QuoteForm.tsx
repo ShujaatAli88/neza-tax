@@ -2,31 +2,24 @@
 
 import { useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   User,
   Phone as PhoneIcon,
   Mail,
-  HelpCircle,
+  Tag,
   Calendar,
-  Clock,
+  MapPinned,
+  HeartPulse,
+  Wallet,
   MessageSquare,
   CheckCircle2,
-  MailCheck,
-  PhoneCall,
-  CalendarCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
 
-const HELP_OPTIONS = [
-  "Tax Services",
-  "Business Services",
-  "Life Insurance",
-  "Health Insurance",
-  "Mortgage Loans",
-  "Other",
-];
+const QUOTE_TYPES = ["Life Insurance", "Health Insurance", "Employee Benefits"];
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -55,7 +48,12 @@ function FieldShell({
   );
 }
 
-export function ContactForm() {
+export function QuoteForm() {
+  const searchParams = useSearchParams();
+  const requestedType = searchParams.get("type");
+  const initialType = QUOTE_TYPES.includes(requestedType ?? "") ? (requestedType as string) : "";
+
+  const [quoteType, setQuoteType] = useState(initialType);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -70,9 +68,11 @@ export function ContactForm() {
       name: String(data.get("name") ?? "").trim(),
       phone: String(data.get("phone") ?? "").trim(),
       email: String(data.get("email") ?? "").trim(),
-      helpType: String(data.get("helpType") ?? "").trim(),
-      preferredDate: data.get("preferredDate"),
-      preferredTime: data.get("preferredTime"),
+      quoteType: String(data.get("quoteType") ?? "").trim(),
+      dateOfBirth: data.get("dateOfBirth"),
+      zip: String(data.get("zip") ?? "").trim(),
+      healthConditions: data.get("healthConditions"),
+      householdIncome: data.get("householdIncome"),
       message: data.get("message"),
       website: data.get("website"), // honeypot — real visitors never see or fill this in
     };
@@ -82,7 +82,9 @@ export function ContactForm() {
     if (!payload.phone) errors.phone = "Phone is required.";
     if (!payload.email) errors.email = "Email is required.";
     else if (!EMAIL_RE.test(payload.email)) errors.email = "Enter a valid email address.";
-    if (!payload.helpType) errors.helpType = "Please select how we can help.";
+    if (!payload.quoteType) errors.quoteType = "Please select a quote type.";
+    if (!payload.dateOfBirth) errors.dateOfBirth = "Date of birth is required.";
+    if (!payload.zip) errors.zip = "ZIP code is required.";
 
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) {
@@ -94,7 +96,7 @@ export function ContactForm() {
     setStatus("submitting");
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("/api/insurance-quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -116,7 +118,7 @@ export function ContactForm() {
   }
 
   const inputClass =
-    "w-full rounded-[var(--radius-card)] border border-[var(--color-rule)] bg-[var(--color-white)] py-3 pr-4 pl-11 text-[0.95rem] transition-colors duration-150 focus:border-[var(--color-tax)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-tax)]";
+    "w-full rounded-[var(--radius-card)] border border-[var(--color-rule)] bg-[var(--color-white)] py-3 pr-4 pl-11 text-[0.95rem] transition-colors duration-150 focus:border-[var(--color-insure)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-insure)]";
   const labelClass = "mb-1.5 block text-[0.9rem] font-medium";
 
   function fieldClass(field: string) {
@@ -133,47 +135,27 @@ export function ContactForm() {
   }
 
   if (status === "success") {
-    const steps = [
-      { Icon: MailCheck, label: "We'll review your message" },
-      { Icon: CalendarCheck, label: "Confirm your appointment time" },
-      { Icon: PhoneCall, label: "Follow up by phone or email" },
-    ];
-
     return (
       <div role="status" aria-live="polite" className="card-surface p-8 text-center md:p-10">
         <span
           className="mx-auto flex h-20 w-20 items-center justify-center rounded-full text-[var(--color-white)]"
           style={{
             background:
-              "linear-gradient(135deg, color-mix(in srgb, var(--color-tax), white 15%), color-mix(in srgb, var(--color-tax), black 15%))",
-            boxShadow: "0 14px 28px -8px color-mix(in srgb, var(--color-tax), transparent 30%)",
+              "linear-gradient(135deg, color-mix(in srgb, var(--color-insure), white 15%), color-mix(in srgb, var(--color-insure), black 15%))",
+            boxShadow: "0 14px 28px -8px color-mix(in srgb, var(--color-insure), transparent 30%)",
           }}
         >
           <CheckCircle2 size={40} strokeWidth={2} aria-hidden="true" />
         </span>
 
-        <h3 className="mt-5 text-[1.4rem]">Message sent!</h3>
+        <h3 className="mt-5 text-[1.4rem]">Quote request sent!</h3>
         <p className="prose-measure mx-auto mt-2 text-[var(--color-ink-60)]">
           We usually reply within one business day. If it&rsquo;s urgent, call{" "}
-          <a href={telHref()} className="font-medium underline underline-offset-4" style={{ color: "var(--color-tax)" }}>
+          <a href={telHref()} className="font-medium underline underline-offset-4" style={{ color: "var(--color-insure)" }}>
             {BUSINESS.phone}
           </a>
           .
         </p>
-
-        <div className="mt-8 grid gap-4 border-t border-[var(--color-rule)] pt-8 sm:grid-cols-3">
-          {steps.map(({ Icon, label }) => (
-            <div key={label} className="flex flex-col items-center gap-2">
-              <span
-                className="flex h-10 w-10 items-center justify-center rounded-full"
-                style={{ backgroundColor: "color-mix(in srgb, var(--color-tax), transparent 88%)" }}
-              >
-                <Icon size={18} style={{ color: "var(--color-tax)" }} aria-hidden="true" />
-              </span>
-              <p className="text-[0.82rem] text-[var(--color-ink-60)]">{label}</p>
-            </div>
-          ))}
-        </div>
       </div>
     );
   }
@@ -182,8 +164,34 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       {/* Honeypot — hidden from real visitors and screen readers alike */}
       <div className="absolute -left-[9999px]" aria-hidden="true">
-        <label htmlFor="website">Leave this field blank</label>
-        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <label htmlFor="quote-website">Leave this field blank</label>
+        <input id="quote-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
+      <div>
+        <label htmlFor="quoteType" className={labelClass}>
+          Quote Type *
+        </label>
+        <FieldShell icon={Tag}>
+          <select
+            id="quoteType"
+            name="quoteType"
+            required
+            className={fieldClass("quoteType")}
+            value={quoteType}
+            onChange={(e) => setQuoteType(e.target.value)}
+          >
+            <option value="" disabled>
+              Select one
+            </option>
+            {QUOTE_TYPES.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        </FieldShell>
+        <FieldError field="quoteType" />
       </div>
 
       <div>
@@ -217,43 +225,75 @@ export function ContactForm() {
         </div>
       </div>
 
-      <div>
-        <label htmlFor="helpType" className={labelClass}>
-          How can we help? *
-        </label>
-        <FieldShell icon={HelpCircle}>
-          <select id="helpType" name="helpType" required className={fieldClass("helpType")} defaultValue="">
-            <option value="" disabled>
-              Select one
-            </option>
-            {HELP_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-        </FieldShell>
-        <FieldError field="helpType" />
-      </div>
-
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="preferredDate" className={labelClass}>
-            Preferred Appointment Date
+          <label htmlFor="dateOfBirth" className={labelClass}>
+            Date of Birth *
           </label>
           <FieldShell icon={Calendar}>
-            <input id="preferredDate" name="preferredDate" type="date" className={inputClass} />
+            <input
+              id="dateOfBirth"
+              name="dateOfBirth"
+              type="date"
+              required
+              className={fieldClass("dateOfBirth")}
+            />
           </FieldShell>
+          <FieldError field="dateOfBirth" />
         </div>
         <div>
-          <label htmlFor="preferredTime" className={labelClass}>
-            Preferred Appointment Time
+          <label htmlFor="zip" className={labelClass}>
+            ZIP Code *
           </label>
-          <FieldShell icon={Clock}>
-            <input id="preferredTime" name="preferredTime" type="time" className={inputClass} />
+          <FieldShell icon={MapPinned}>
+            <input
+              id="zip"
+              name="zip"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]{5}(-[0-9]{4})?"
+              required
+              className={fieldClass("zip")}
+            />
           </FieldShell>
+          <FieldError field="zip" />
         </div>
       </div>
+
+      {quoteType === "Life Insurance" && (
+        <div>
+          <label htmlFor="healthConditions" className={labelClass}>
+            Health Conditions
+          </label>
+          <FieldShell icon={HeartPulse} align="top">
+            <textarea
+              id="healthConditions"
+              name="healthConditions"
+              rows={3}
+              className={inputClass}
+              placeholder="List any current health conditions, or leave blank if none."
+            />
+          </FieldShell>
+        </div>
+      )}
+
+      {quoteType === "Health Insurance" && (
+        <div>
+          <label htmlFor="householdIncome" className={labelClass}>
+            Household Income
+          </label>
+          <FieldShell icon={Wallet}>
+            <input
+              id="householdIncome"
+              name="householdIncome"
+              type="text"
+              inputMode="numeric"
+              className={inputClass}
+              placeholder="Approximate annual household income"
+            />
+          </FieldShell>
+        </div>
+      )}
 
       <div>
         <label htmlFor="message" className={labelClass}>
@@ -271,17 +311,14 @@ export function ContactForm() {
       )}
 
       <Button type="submit" variant="primary" className="w-full sm:w-auto">
-        {status === "submitting" ? "Sending…" : "Request Appointment"}
+        {status === "submitting" ? "Sending…" : "Get My Quote"}
       </Button>
 
       <div className="space-y-1.5 border-t border-[var(--color-rule)] pt-4 text-[0.8rem] text-[var(--color-ink-60)]">
-        <p>Submitting this form does not confirm an appointment. We will contact you to confirm availability.</p>
+        <p>Submitting this form does not guarantee coverage, pricing, or eligibility.</p>
         <p>
-          Please do not include Social Security numbers, tax documents, financial account numbers, or
-          other sensitive personal information in this form.
-        </p>
-        <p>
-          Your information will be handled in accordance with our{" "}
+          The information above, including any health or income details you provide, is used
+          solely to prepare your quote and will be handled in accordance with our{" "}
           <Link href="/legal/privacy" className="font-medium underline underline-offset-4">
             Privacy Policy
           </Link>

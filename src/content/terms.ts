@@ -7,6 +7,7 @@ export const TERMS_SECTIONS = [
     heading: "Use of This Site",
     body: [
       "This website is provided by Neza Financial Group LLC for informational purposes and to allow visitors to learn about and request tax, business, insurance, and mortgage-related services. By using this site, you agree to use it only for lawful purposes.",
+      "Submitting an inquiry or appointment request through this website does not create a client, tax preparer-client, insurance agent-client, or mortgage lending relationship.",
     ],
   },
   {

@@ -157,8 +157,15 @@ export default function AboutPage() {
       <section className="band-ledger py-10">
         <Container>
           <SectionEyebrow className="mb-4">Licensing &amp; Disclosures</SectionEyebrow>
+          <p className="mb-4 text-[0.85rem] text-[var(--color-ink-60)]">
+            Tax preparation services provided by experienced, CTEC-registered tax preparers.
+          </p>
           <InsuranceDisclosure className="mb-4" />
           <MortgageDisclosure />
+          <p className="mt-4 text-[0.8rem] text-[var(--color-ink-60)]">
+            This website is independently owned and maintained. It is not maintained by, or
+            affiliated with, Covered California.
+          </p>
         </Container>
       </section>
     </>

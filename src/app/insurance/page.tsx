@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { HeartPulse, Stethoscope, Users, UsersRound, Smile, PiggyBank, Compass, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { HeartPulse, Stethoscope, Users, Smile, PiggyBank, Compass } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { IconBadge } from "@/components/ui/IconBadge";
 import { PageHeader } from "@/components/content/PageHeader";
 import { SectionDecor } from "@/components/ui/SectionDecor";
-import { InsuranceDisclosure } from "@/components/compliance/InsuranceDisclosure";
 import { JsonLd, serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { telHref } from "@/lib/contact";
 
@@ -23,6 +23,7 @@ const SECTIONS = [
     title: "Life Insurance",
     body: "Term and permanent life insurance options designed around your coverage needs, budget, and goals.",
     cta: "Get a Life Insurance Quote",
+    quoteType: "Life Insurance",
   },
   {
     id: "health",
@@ -31,20 +32,16 @@ const SECTIONS = [
     title: "Health Insurance",
     body: "Individual and family health insurance options, including Covered California plans, to help you find coverage that fits your household's needs and budget.",
     cta: "Get a Health Insurance Quote",
+    quoteType: "Health Insurance",
   },
   {
     id: "employee-benefits",
     color: "var(--color-mortgage)",
     Icon: Users,
     title: "Employee Benefits",
-    body: "Employee benefit solutions designed to help businesses offer valuable coverage to their employees, including options for small groups.",
-  },
-  {
-    id: "group-health",
-    color: "var(--color-seal)",
-    Icon: UsersRound,
-    title: "Group Health",
-    body: "Group health insurance options for small and growing businesses, with assistance selecting and setting up coverage for employees.",
+    body: "Employee benefit solutions designed to help businesses offer valuable coverage to their employees, including group health insurance and other options for small and growing businesses.",
+    cta: "Get an Employee Benefits Quote",
+    quoteType: "Employee Benefits",
   },
   {
     id: "dental-vision",
@@ -100,7 +97,11 @@ export default function InsurancePage() {
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{s.body}</p>
                 {s.cta && (
                   <div className="mt-auto pt-5">
-                    <Button href="/contact" variant="secondary" className="w-full">
+                    <Button
+                      href={`/insurance/quote?type=${encodeURIComponent(s.quoteType)}`}
+                      variant="secondary"
+                      className="w-full"
+                    >
                       {s.cta}
                     </Button>
                   </div>
@@ -130,10 +131,16 @@ export default function InsurancePage() {
       <section className="band-white py-8">
         <Container>
           <div
-            className="card-surface flex items-start gap-4 p-6"
+            className="card-surface flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center"
             style={{ borderLeft: "4px solid var(--color-insure)" }}
           >
-            <IconBadge icon={ShieldCheck} color="var(--color-insure)" />
+            <Image
+              src="/images/covered-ca-lia-badge.png"
+              alt="Covered California — Licensed Insurance Agent"
+              width={1183}
+              height={238}
+              className="h-auto w-[220px] shrink-0"
+            />
             <div>
               <h3 className="text-[1rem]">Covered California Certified Insurance Agent</h3>
               <p className="mt-1.5 text-[0.9rem] text-[var(--color-ink-60)]">
@@ -145,19 +152,13 @@ export default function InsurancePage() {
         </Container>
       </section>
 
-      <section className="band-ledger py-8">
-        <Container>
-          <InsuranceDisclosure />
-        </Container>
-      </section>
-
       <section className="section bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
         <Container className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-[var(--color-eggshell)]">Let&rsquo;s Find the Right Solution</h2>
             <p className="prose-measure mt-3 text-[var(--color-chrome-muted)]">
-              Whether you&rsquo;re looking for life or health insurance, employee benefits, or
-              retirement options, we&rsquo;re here to help you understand your choices.
+              Whether you&rsquo;re looking for life, health, dental &amp; vision insurance, employee
+              benefits, or retirement options, we&rsquo;re here to help you understand your choices.
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-4">

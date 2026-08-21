@@ -1,4 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import { Quote, Star } from "lucide-react";
+
+// Testimonials vary a lot in length. Rather than let a long one stretch its
+// card (and its row) far past the others, quotes past this length clamp to a
+// fixed number of lines with a "Read more" toggle instead of being cut for good.
+const LONG_QUOTE_THRESHOLD = 500;
 
 export function TestimonialCard({
   quote,
@@ -11,6 +19,8 @@ export function TestimonialCard({
   location: string;
   color?: string;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = quote.length > LONG_QUOTE_THRESHOLD;
   const initial = author.trim().charAt(0).toUpperCase();
 
   return (
@@ -43,11 +53,25 @@ export function TestimonialCard({
       </div>
 
       <blockquote
-        className="prose-measure relative mt-5 flex-1 text-[1.02rem] leading-relaxed italic"
+        className={`prose-measure relative mt-5 flex-1 text-[1.02rem] leading-relaxed italic ${
+          isLong && !expanded ? "line-clamp-6" : ""
+        }`}
         style={{ fontFamily: "var(--font-display)" }}
       >
         &ldquo;{quote}&rdquo;
       </blockquote>
+
+      {isLong && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="relative mt-2 w-fit text-[0.85rem] font-semibold underline underline-offset-4"
+          style={{ color }}
+          aria-expanded={expanded}
+        >
+          {expanded ? "Read less" : "Read more"}
+        </button>
+      )}
 
       <figcaption className="relative mt-5 flex items-center gap-3 border-t border-[var(--color-rule)] pt-4">
         <span

@@ -26,6 +26,13 @@ export const PRIVACY_SECTIONS = [
     ],
   },
   {
+    heading: "Service Providers",
+    body: [
+      "We use third-party service providers to help operate this website and support our business, including providers for website hosting, form submission and processing, email delivery, appointment scheduling, and website analytics.",
+      "These service providers may process personal information on our behalf solely to provide these services to us, and are not authorized to use your information for their own independent purposes.",
+    ],
+  },
+  {
     heading: "Data Retention",
     body: [
       "We retain information submitted through this site for as long as reasonably necessary to respond to your inquiry, provide requested services, and comply with applicable recordkeeping, tax, and financial services regulations.",
@@ -40,7 +47,7 @@ export const PRIVACY_SECTIONS = [
   {
     heading: "Your Rights (Including California Residents)",
     body: [
-      "If you are a California resident, the California Consumer Privacy Act (CCPA), as amended by the California Privacy Rights Act (CPRA), gives you the right to know what personal information we collect about you, request deletion of your personal information, correct inaccurate personal information, and opt out of the sale or sharing of personal information — though we do not sell or share personal information as defined under CCPA/CPRA.",
+      "To the extent applicable, if you are a California resident, the California Consumer Privacy Act (CCPA), as amended by the California Privacy Rights Act (CPRA), gives you the right to know what personal information we collect about you, request deletion of your personal information, correct inaccurate personal information, and opt out of the sale or sharing of personal information — though we do not sell or share personal information as defined under CCPA/CPRA.",
       "To exercise any of these rights, contact us using the information below. We will not discriminate against you for exercising your privacy rights.",
     ],
   },

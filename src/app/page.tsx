@@ -213,6 +213,10 @@ export default function HomePage() {
             <Button href="/about" variant="invert" className="mt-7">
               Meet Neza Financial Group
             </Button>
+            <p className="mt-6 text-[0.78rem] text-[var(--color-chrome-muted)]">
+              This website is independently owned and maintained. It is not maintained by, or
+              affiliated with, Covered California.
+            </p>
           </div>
 
           <div className="relative mx-auto h-full min-h-[260px] w-full max-w-[380px] overflow-hidden rounded-[20px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]">
