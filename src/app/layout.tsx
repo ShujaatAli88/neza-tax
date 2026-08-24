@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { fraunces, publicSans, plexMono } from "@/lib/fonts";
 import { Header } from "@/components/layout/Header";
-import { SeasonBar } from "@/components/layout/SeasonBar";
 import { Footer } from "@/components/layout/Footer";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
 import { BUSINESS } from "@/config/business";
@@ -28,7 +27,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <Header />
-        <SeasonBar />
         <main id="main" className="flex-1 pb-[var(--mobile-bar-h)] lg:pb-0">
           {children}
         </main>

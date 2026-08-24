@@ -71,7 +71,10 @@ export default function ContactPage() {
 
                 <address className="mt-3 not-italic">
                   <p className="text-[0.95rem] font-medium">{BUSINESS.brand}</p>
-                  <p className="mt-1 text-[0.9rem] text-[var(--color-ink-60)]">
+                  <p className="mt-1 text-[0.85rem] text-[var(--color-ink-60)]">
+                    Located at the Neza Tax Services office
+                  </p>
+                  <p className="mt-1.5 text-[0.9rem] text-[var(--color-ink-60)]">
                     {BUSINESS.address.street}
                     <br />
                     {BUSINESS.address.city}, {BUSINESS.address.state} {BUSINESS.address.zip}

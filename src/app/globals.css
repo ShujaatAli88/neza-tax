@@ -276,16 +276,18 @@
     animation: hero-scroll-cue 2.2s ease-in-out infinite;
   }
 
-  /* Full-viewport hero, offset for the sticky header (and the fixed mobile
-     action bar below lg). vh first as a fallback, svh overrides it in
-     browsers that support it — svh excludes mobile browser chrome so CTAs
-     never land under the fold. Padding lives here (not as py-* utilities)
-     for the same cascade-layer reason as the margins above. */
+  /* Hero height: capped clamp, not full vh/svh. Mobile stays compact (client
+     confirmed the small-screen version is fine as-is); desktop is taller
+     below, since a short hero on large screens read as unfinished/cut off —
+     the next section should require a scroll on desktop. vh first as a
+     fallback, svh overrides it in browsers that support it. Padding lives
+     here (not as py-* utilities) for the same cascade-layer reason as the
+     margins above. */
   .hero-viewport {
     padding-top: 3.5rem;
     padding-bottom: 3.5rem;
-    min-height: calc(100vh - var(--header-h));
-    min-height: calc(100svh - var(--header-h));
+    min-height: clamp(420px, 68vh, 620px);
+    min-height: clamp(420px, 68svh, 620px);
   }
 
   @media (min-width: 640px) {
@@ -302,35 +304,17 @@
     }
   }
 
-  @media (max-width: 1023.98px) {
+  @media (min-width: 1024px) {
     .hero-viewport {
-      min-height: calc(100vh - var(--header-h) - var(--mobile-bar-h));
-      min-height: calc(100svh - var(--header-h) - var(--mobile-bar-h));
+      min-height: clamp(560px, 96vh, 920px);
+      min-height: clamp(560px, 96svh, 920px);
     }
   }
 
-  /* No height-conditional override: min-height is a floor, not a ceiling.
-     With centering + sane padding-block, a short viewport just grows the
-     hero taller than the viewport (scroll to see the rest) rather than
-     clipping anything — so there's nothing to special-case here. */
-
-  /* SeasonBar (the dismissible deadline banner) sits between the sticky
-     header and <main> as a sibling — when it's present it consumes extra
-     height the hero's base calc above doesn't know about, so reserve it
-     here via the sibling selector rather than guessing at it unconditionally
-     (the banner is dismissible and not always present). */
-  [data-season-bar] ~ main .hero-viewport {
-    min-height: calc(100vh - var(--header-h) - 2.5rem);
-    min-height: calc(100svh - var(--header-h) - 2.5rem);
-  }
-
-  @media (max-width: 1023.98px) {
-    [data-season-bar] ~ main .hero-viewport {
-      min-height: calc(100vh - var(--header-h) - var(--mobile-bar-h) - 2.5rem);
-      min-height: calc(100svh - var(--header-h) - var(--mobile-bar-h) - 2.5rem);
-    }
-  }
-
+  /* No height-conditional override below lg: min-height is a floor, not a
+     ceiling. With centering + sane padding-block, a short viewport just
+     grows the hero taller than the viewport (scroll to see the rest) rather
+     than clipping anything — so there's nothing to special-case here. */
 }
 
 @media (prefers-reduced-motion: reduce) {

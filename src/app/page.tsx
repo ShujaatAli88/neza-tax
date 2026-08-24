@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { IconBadge } from "@/components/ui/IconBadge";
+import { EqualHousingIcon } from "@/components/ui/EqualHousingIcon";
 import { ServiceCard } from "@/components/content/ServiceCard";
 import { PhotoFeatureBlock } from "@/components/content/PhotoFeatureBlock";
 import { YearRoundSupportBlock } from "@/components/content/YearRoundSupportBlock";
@@ -60,7 +61,7 @@ const CREDENTIALS = [
       `CA Insurance Lic. #${BUSINESS.licenses.caInsurance}`,
     ],
     color: "var(--color-insure)",
-    icon: Umbrella,
+    image: { src: "/images/covered-ca-lia-badge.png", width: 1183, height: 238 },
   },
   {
     key: "mortgage",
@@ -70,7 +71,7 @@ const CREDENTIALS = [
       "Mortgage loan origination through C2 Financial Corporation",
     ],
     color: "var(--color-mortgage)",
-    icon: Home,
+    customIcon: <EqualHousingIcon />,
   },
 ];
 
@@ -298,7 +299,7 @@ export default function HomePage() {
                 "Individual Tax Returns",
                 "Business Tax Returns",
                 "Amended & Prior-Year Returns",
-                "Tax Planning",
+                "ITIN Application & Renewal",
               ]}
               blurb="For anyone who files — employee, self-employed, or behind."
               href="/tax-services"
@@ -462,10 +463,10 @@ export default function HomePage() {
                       alt={c.name}
                       width={c.image.width}
                       height={c.image.height}
-                      className="max-h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                      className="max-h-16 w-auto max-w-[85%] object-contain transition-transform duration-200 group-hover:scale-105"
                     />
                   ) : (
-                    c.icon && <IconBadge icon={c.icon} color={c.color} size="lg" />
+                    c.customIcon
                   )}
                 </div>
                 <p className="relative mt-5 text-[0.98rem] font-semibold">{c.name}</p>
