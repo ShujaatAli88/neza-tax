@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-white: #ffffff; /* primary page band */
-  --color-ledger: #f6f4e9; /* cream — alternate section band */
-  --color-paper: #f1f5f7; /* light cool-grey — secondary band / card surfaces */
-  --color-ink: #262626; /* near-black — all body text */
-  --color-ink-60: #6e6e6e; /* secondary text */
-  --color-rule: #d6dae0; /* hairlines, table rules, dividers */
+  --color-white: #ffffff; /* true white — button/text use, not section fill */
+  --color-ledger: #f9f6f5; /* cream — primary section band per client palette */
+  --color-paper: #f5f1ee; /* slightly deeper cream — alternate section band */
+  --color-ink: #131618; /* near-black charcoal — all body text */
+  --color-ink-60: #5c6063; /* secondary text, same charcoal family */
+  --color-rule: #e3ded9; /* hairlines, table rules, dividers — warm to match cream */
 
-  --color-chrome: #003512; /* dark forest green chrome — header & footer only */
-  --color-chrome-2: #005d1f; /* brand green — hover surfaces, borders on chrome */
-  --color-eggshell: #ffffff; /* text/icons on chrome */
-  --color-chrome-muted: #9fb7a8; /* secondary text on chrome */
+  --color-chrome: #131618; /* charcoal — header, hero base, footer */
+  --color-chrome-2: #1c1f22; /* charcoal-light — raised surfaces / hover on chrome */
+  --color-eggshell: #ffffff; /* headline/main text on chrome */
+  --color-chrome-muted: #d7d6d7; /* nav + secondary text on chrome */
 
-  --color-tax: #1b4368; /* ink blue */
-  --color-insure: #245c63; /* Pacific teal */
-  --color-mortgage: #96601f; /* clay */
-  --color-seal: #8a6a1e; /* muted gold — credentials only */
+  --color-tax: #b7882d; /* gold primary */
+  --color-insure: #b99a4e; /* gold mid */
+  --color-mortgage: #cb9f45; /* gold light */
+  --color-seal: #b99a4e; /* gold mid — credentials */
 
   --radius-card: 16px;
   --radius-pill: 999px;
@@ -146,11 +146,11 @@
   }
 
   .band-ledger {
-    background: linear-gradient(180deg, #f8f6ee 0%, #f3f0e3 55%, #efece0 100%);
+    background: linear-gradient(180deg, #f7f3f0 0%, #f5f1ee 55%, #f2ede9 100%);
   }
 
   .band-white {
-    background: linear-gradient(180deg, #ffffff 0%, #fbfbfa 55%, #f6f7f6 100%);
+    background: linear-gradient(180deg, #faf8f6 0%, #f9f6f5 55%, #f7f4f2 100%);
   }
 
   .card-surface {
@@ -247,6 +247,25 @@
     margin-top: 2.5rem;
   }
 
+  /* Compact the gaps between hero elements on mobile — content (unchanged)
+     wraps to more lines at narrow widths, so tighter spacing is the only
+     lever left to keep the hero close to the client's ~380-420px target. */
+  @media (max-width: 767.98px) {
+    .hero-headline {
+      margin-top: 0.5rem;
+      font-size: clamp(2.25rem, 1.6rem + 4vw, 3rem);
+    }
+    .hero-fade-2 {
+      margin-top: 0.5rem;
+    }
+    .hero-fade-3 {
+      margin-top: 1rem;
+    }
+    .hero-fade-4 {
+      margin-top: 1rem;
+    }
+  }
+
   @keyframes hero-slow-zoom {
     from {
       transform: scale(1);
@@ -260,61 +279,38 @@
     animation: hero-slow-zoom 20s ease-out both;
   }
 
-  @keyframes hero-scroll-cue {
-    0%,
-    100% {
-      transform: translateY(0);
-      opacity: 0.55;
-    }
-    50% {
-      transform: translateY(6px);
-      opacity: 1;
-    }
-  }
-
-  .hero-scroll-cue {
-    animation: hero-scroll-cue 2.2s ease-in-out infinite;
-  }
-
-  /* Hero height: capped clamp, not full vh/svh. Mobile stays compact (client
-     confirmed the small-screen version is fine as-is); desktop is taller
-     below, since a short hero on large screens read as unfinished/cut off —
-     the next section should require a scroll on desktop. vh first as a
-     fallback, svh overrides it in browsers that support it. Padding lives
+  /* Hero height: fixed/clamped per breakpoint, NEVER 100vh/100svh (per client
+     spec — reference proportions were measured off a ~1402px screenshot and
+     translated to vw-based clamps so they scale the same way). Padding lives
      here (not as py-* utilities) for the same cascade-layer reason as the
      margins above. */
   .hero-viewport {
-    padding-top: 3.5rem;
-    padding-bottom: 3.5rem;
-    min-height: clamp(420px, 68vh, 620px);
-    min-height: clamp(420px, 68svh, 620px);
-  }
-
-  @media (min-width: 640px) {
-    .hero-viewport {
-      padding-top: 3rem;
-      padding-bottom: 3rem;
-    }
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    min-height: clamp(380px, 55vw, 420px);
   }
 
   @media (min-width: 768px) {
     .hero-viewport {
-      padding-top: 4rem;
-      padding-bottom: 4rem;
+      padding-top: 2.25rem;
+      padding-bottom: 2.25rem;
+      min-height: clamp(420px, 42vw, 460px);
     }
   }
 
   @media (min-width: 1024px) {
     .hero-viewport {
-      min-height: clamp(560px, 96vh, 920px);
-      min-height: clamp(560px, 96svh, 920px);
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+      min-height: clamp(460px, 36vw, 500px);
     }
   }
 
-  /* No height-conditional override below lg: min-height is a floor, not a
-     ceiling. With centering + sane padding-block, a short viewport just
-     grows the hero taller than the viewport (scroll to see the rest) rather
-     than clipping anything — so there's nothing to special-case here. */
+  @media (min-width: 1280px) {
+    .hero-viewport {
+      min-height: clamp(480px, 38vw, 600px);
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

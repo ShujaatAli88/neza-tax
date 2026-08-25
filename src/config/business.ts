@@ -48,7 +48,10 @@ export const BUSINESS = {
     instagram: null as string | null, // TODO_CONFIRM
   },
 
-  googleRating: null as { rating: number; count: number } | null, // TODO_CONFIRM
+  // Confirmed against the live "Neza Tax Services" Google Maps listing
+  // (client-supplied screenshot): 5.0 rating, 11 reviews — matches the 11
+  // reviews transcribed into src/content/googleReviews.ts exactly.
+  googleRating: { rating: 5.0, count: 11 } as { rating: number; count: number } | null,
   c2PrequalUrl: "https://www.c2financialcorp.com/josegonzalez",
 
   photos: {

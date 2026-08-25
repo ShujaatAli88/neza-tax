@@ -6,18 +6,24 @@ type Variant = "primary" | "secondary" | "onChrome" | "invert" | "glass" | "ghos
 const base =
   "inline-flex items-center justify-center gap-2 rounded-[var(--radius-pill)] px-7 py-3.5 text-[0.95rem] font-semibold transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ink)]";
 
+// Gold is the one brand accent (per client palette) — primary CTAs everywhere,
+// on light or dark backgrounds, use the same gold-gradient fill; secondary
+// CTAs use a transparent fill with a gold border.
+const GOLD_GRADIENT = "bg-[linear-gradient(135deg,#B7882D,#CB9F45)]";
+const GOLD_BORDER = "border-[var(--color-tax)]";
+
 const variants: Record<Variant, string> = {
   primary:
-    "bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-ink),white_8%),var(--color-ink))] text-[var(--color-white)] shadow-[0_10px_24px_-6px_rgba(16,26,21,0.45)] hover:shadow-[0_16px_32px_-6px_rgba(16,26,21,0.5)] hover:-translate-y-0.5",
+    `${GOLD_GRADIENT} text-[var(--color-white)] shadow-[0_10px_24px_-6px_rgba(183,136,45,0.45)] hover:shadow-[0_16px_32px_-6px_rgba(183,136,45,0.5)] hover:-translate-y-0.5`,
   secondary:
-    "border-2 border-[var(--color-ink)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-white)] hover:-translate-y-0.5",
+    `border-2 ${GOLD_BORDER} text-[var(--color-tax)] hover:bg-[var(--color-tax)] hover:text-[var(--color-white)] hover:-translate-y-0.5`,
   onChrome:
-    "border-2 border-[var(--color-eggshell)] text-[var(--color-eggshell)] hover:bg-[var(--color-eggshell)] hover:text-[var(--color-chrome)]",
+    `border-2 ${GOLD_BORDER} text-[var(--color-eggshell)] hover:bg-[var(--color-tax)] hover:text-[var(--color-eggshell)]`,
   invert:
-    "bg-[linear-gradient(135deg,var(--color-white),color-mix(in_srgb,var(--color-eggshell),black_4%))] text-[var(--color-chrome)] shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.4)] hover:-translate-y-0.5",
+    `${GOLD_GRADIENT} text-[var(--color-white)] shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.4)] hover:-translate-y-0.5`,
   glass:
-    "glass-surface border border-white/30 text-[var(--color-eggshell)] hover:bg-white/20 hover:border-white/50",
-  ghost: "rounded-none px-0 py-0 text-[var(--color-ink)] underline underline-offset-4 hover:no-underline",
+    `glass-surface border ${GOLD_BORDER} text-[var(--color-eggshell)] hover:bg-white/10`,
+  ghost: "rounded-none px-0 py-0 text-[var(--color-tax)] underline underline-offset-4 hover:no-underline",
 };
 
 interface ButtonProps {

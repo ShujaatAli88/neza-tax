@@ -26,6 +26,7 @@ import { CalendarDateBadge } from "@/components/content/CalendarDateBadge";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, organizationSchema } from "@/lib/schema";
 import { TESTIMONIALS } from "@/content/testimonials";
+import { GOOGLE_REVIEWS } from "@/content/googleReviews";
 import { getUpcomingDeadlines, urgencyColor } from "@/config/deadlines";
 import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
@@ -101,20 +102,15 @@ export default function HomePage() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(100deg, rgba(0,53,18,0.92) 0%, rgba(0,53,18,0.86) 38%, rgba(0,53,18,0.4) 72%, rgba(0,53,18,0.22) 100%)",
+              "linear-gradient(100deg, rgba(19,22,24,0.92) 0%, rgba(19,22,24,0.86) 38%, rgba(19,22,24,0.4) 72%, rgba(19,22,24,0.22) 100%)",
           }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 mix-blend-color"
-          style={{ backgroundColor: "var(--color-chrome-2)", opacity: 0.35 }}
         />
         <div
           aria-hidden="true"
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(120% 100% at 50% 100%, rgba(0,20,7,0.45) 0%, transparent 55%)",
+              "radial-gradient(120% 100% at 50% 100%, rgba(8,9,10,0.45) 0%, transparent 55%)",
           }}
         />
         <Container className="relative">
@@ -167,21 +163,6 @@ export default function HomePage() {
             </ul>
           </div>
         </Container>
-
-        <a
-          href="#community"
-          className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 rounded-full text-[var(--color-chrome-muted)] hover:text-[var(--color-eggshell)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-eggshell)] sm:block"
-        >
-          <span className="sr-only">Scroll to learn more</span>
-          <span
-            aria-hidden="true"
-            className="hero-scroll-cue flex h-8 w-8 items-center justify-center rounded-full border border-white/20"
-          >
-            <svg width="12" height="7" viewBox="0 0 12 7" aria-hidden="true">
-              <path d="M1 1l5 5 5-5" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            </svg>
-          </span>
-        </a>
       </section>
 
       {/* Proudly serving the community */}
@@ -231,7 +212,7 @@ export default function HomePage() {
             <div
               aria-hidden="true"
               className="absolute inset-0"
-              style={{ background: "linear-gradient(0deg, rgba(0,53,18,0.4), transparent 55%)" }}
+              style={{ background: "linear-gradient(0deg, rgba(19,22,24,0.4), transparent 55%)" }}
             />
           </div>
         </Container>
@@ -425,7 +406,13 @@ export default function HomePage() {
             </p>
           </div>
           <div className="mt-10">
-            <ReviewsCarousel reviews={TESTIMONIALS} colors={ACCENTS} />
+            <ReviewsCarousel
+              reviews={[
+                ...GOOGLE_REVIEWS.map((r) => ({ ...r, source: "Google Review" })),
+                ...TESTIMONIALS.slice(0, 3),
+              ]}
+              colors={ACCENTS}
+            />
           </div>
         </Container>
       </section>
@@ -439,8 +426,8 @@ export default function HomePage() {
             <SectionEyebrow className="justify-center">Certifications &amp; Affiliations</SectionEyebrow>
             <h2 className="mt-4">Backed by Real Credentials</h2>
             <p className="prose-measure mx-auto mt-4 text-[1.05rem] text-[var(--color-ink-60)]">
-              We hold ourselves to state and federal standards for tax preparation — not just
-              promises.
+              Our tax, insurance, and mortgage services are backed by recognized licenses,
+              registrations, certifications, and authorizations.
             </p>
           </div>
 
