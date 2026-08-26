@@ -60,7 +60,7 @@ export function MobileDrawer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setOpen(false)}
-                  className="border-b border-[var(--color-rule)] py-4 text-lg font-medium"
+                  className="border-b border-[var(--color-rule)] py-4 text-lg font-medium transition-colors hover:text-[var(--color-tax)]"
                 >
                   {item.label}
                 </a>
@@ -69,7 +69,7 @@ export function MobileDrawer() {
                   key={item.label}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="border-b border-[var(--color-rule)] py-4 text-lg font-medium"
+                  className="border-b border-[var(--color-rule)] py-4 text-lg font-medium transition-colors hover:text-[var(--color-tax)]"
                 >
                   {item.label}
                 </Link>

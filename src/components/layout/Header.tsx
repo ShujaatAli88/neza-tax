@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Phone } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { MegaMenu } from "@/components/layout/MegaMenu";
@@ -19,8 +20,9 @@ export function Header() {
         <div className="hidden items-center lg:flex">
           <a
             href={telHref()}
-            className="font-mono-figure whitespace-nowrap pl-3 text-[0.9rem] font-medium text-[var(--color-eggshell)] hover:text-[var(--color-chrome-muted)]"
+            className="font-mono-figure inline-flex items-center gap-2 whitespace-nowrap pl-3 text-[0.9rem] font-medium text-[var(--color-eggshell)] transition-colors hover:text-[var(--color-tax)]"
           >
+            <Phone size={16} strokeWidth={2.25} className="text-[var(--color-tax)]" aria-hidden="true" />
             {BUSINESS.phone}
           </a>
         </div>

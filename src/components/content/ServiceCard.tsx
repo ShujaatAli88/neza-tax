@@ -8,7 +8,7 @@ const ACCENT: Record<ServiceColor, string> = {
   tax: "var(--color-tax)",
   insure: "var(--color-insure)",
   mortgage: "var(--color-mortgage)",
-  business: "var(--color-ink)",
+  business: "var(--color-business)",
 };
 
 interface ServiceCardProps {

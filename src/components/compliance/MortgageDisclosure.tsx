@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { EqualHousingIcon } from "@/components/ui/EqualHousingIcon";
 import { BUSINESS } from "@/config/business";
 import { cn } from "@/lib/cn";
@@ -60,8 +61,9 @@ export function MortgageDisclosure({
 
       <div className="mt-4 flex flex-wrap items-center gap-4">
         <EqualHousingIcon />
+        <Image src="/images/nmls-logo.png" alt="NMLS" width={106} height={75} className="h-14 w-auto rounded-md" />
         <a
-          href="https://www.nmlsconsumeraccess.org/"
+          href="https://nmlsconsumeraccess.org/Home.aspx/MainSearch"
           target="_blank"
           rel="noopener noreferrer"
           className="font-medium underline underline-offset-4"

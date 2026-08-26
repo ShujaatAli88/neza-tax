@@ -2,6 +2,11 @@
 // the client — reproduced verbatim (typos included) since they're labeled as
 // real Google reviews on the site. Do not fabricate, edit, or add to this list
 // without a new batch from the actual listing.
+//
+// David Lam's and Edna B's reviews were removed at the client's request —
+// David Lam's calls Jose a "CPA" (he isn't one) and Edna B's addresses him as
+// "Juan," both inaccurate. The full 11-review set still lives on the real
+// Google listing (see BUSINESS.social.google); this file is a curated subset.
 
 export interface GoogleReview {
   quote: string;
@@ -36,11 +41,6 @@ export const GOOGLE_REVIEWS: GoogleReview[] = [
   },
   {
     quote:
-      "Mr. Gonzalez is an excellent CPA. He spends time with his clients and listens to your tax situation. His schedule is flexible and easy to work with. His fees are reasonable. Highly recommended.",
-    author: "David Lam",
-  },
-  {
-    quote:
       "It was a pleasure doing business with Jose. He was engaging with pleasantries and laughter all the while giving professional attention to my taxes. I would recommend his services to all my friends and family. Thanks again, Jose",
     author: "Bruce Rowe",
   },
@@ -48,10 +48,6 @@ export const GOOGLE_REVIEWS: GoogleReview[] = [
     quote:
       "Found Mr Jose on Thumbtack. Reviews are amazing. Messaged him and got a response right away. All questions you have will be answered. It takes time sometimes but understandable because it's tax season. He will however make it a point to reply ASAP. He will help you with anything you need. I will be using him every year moving forward. Satisfied with his service.",
     author: "chrissy c.",
-  },
-  {
-    quote: "Juan helped me do my taxes as a first time home buyer. He was quick and price was reasonable.",
-    author: "Edna B",
   },
   {
     quote: "Awesome, quick, affordable, thorough! Jose did a fantastic job!",

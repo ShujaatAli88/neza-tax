@@ -15,7 +15,7 @@ export function MegaMenu() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium text-[var(--color-eggshell)] hover:text-[var(--color-chrome-muted)] xl:px-2.5 xl:text-[0.9rem]"
+                className="block whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium text-[var(--color-eggshell)] transition-colors hover:text-[var(--color-tax)] xl:px-2.5 xl:text-[0.9rem]"
               >
                 {item.label}
               </a>
@@ -24,7 +24,7 @@ export function MegaMenu() {
             <li key={item.label}>
               <Link
                 href={item.href}
-                className="block whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium text-[var(--color-eggshell)] hover:text-[var(--color-chrome-muted)] xl:px-2.5 xl:text-[0.9rem]"
+                className="block whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium text-[var(--color-eggshell)] transition-colors hover:text-[var(--color-tax)] xl:px-2.5 xl:text-[0.9rem]"
               >
                 {item.label}
               </Link>

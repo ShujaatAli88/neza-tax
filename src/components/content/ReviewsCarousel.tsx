@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TestimonialCard } from "@/components/content/TestimonialCard";
 import { BUSINESS } from "@/config/business";
+
+const AUTOPLAY_MS = 7000;
+const VISIBLE = 3; // desktop count — tablet/mobile hide slots 2/3 via CSS, see below
 
 // Official Google "G" mark (brand colors), used only to link out to the
 // business's real Google listing — never restyled to the site's gold theme.
@@ -27,7 +30,10 @@ interface ReviewItem {
 
 // Server-rendered markup is a plain stacked list (all reviews, one after
 // another) so it degrades gracefully if JS never hydrates. Once mounted, it
-// becomes a one-at-a-time slider with Previous/Next controls.
+// becomes a windowed slider — 3 cards visible on desktop, 2 on tablet, 1 on
+// mobile (slots 2/3 are just hidden via CSS, not removed from the DOM, so no
+// JS breakpoint detection or hydration-mismatch risk) — that auto-advances
+// one review at a time, pausing on hover/focus and honoring reduced motion.
 export function ReviewsCarousel({
   reviews,
   colors,
@@ -37,8 +43,21 @@ export function ReviewsCarousel({
 }) {
   const [hydrated, setHydrated] = useState(false);
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const reduceMotionRef = useRef(false);
 
-  useEffect(() => setHydrated(true), []);
+  useEffect(() => {
+    setHydrated(true);
+    reduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated || paused || reduceMotionRef.current || reviews.length <= 1) return;
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % reviews.length);
+    }, AUTOPLAY_MS);
+    return () => clearInterval(id);
+  }, [hydrated, paused, reviews.length]);
 
   if (!hydrated) {
     return (
@@ -53,14 +72,28 @@ export function ReviewsCarousel({
     );
   }
 
-  const current = reviews[index];
+  const visible = Array.from({ length: Math.min(VISIBLE, reviews.length) }, (_, i) => ({
+    review: reviews[(index + i) % reviews.length],
+    slot: i,
+    key: (index + i) % reviews.length,
+  }));
   const goPrev = () => setIndex((i) => (i === 0 ? reviews.length - 1 : i - 1));
-  const goNext = () => setIndex((i) => (i === reviews.length - 1 ? 0 : i + 1));
+  const goNext = () => setIndex((i) => (i + 1) % reviews.length);
 
   return (
-    <div className="relative">
-      <div role="region" aria-label="Client reviews" aria-live="polite" className="mx-auto max-w-xl">
-        <TestimonialCard key={`${current.author}-${index}`} {...current} color={colors[index % colors.length]} />
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
+      <div role="region" aria-label="Client reviews" aria-live="polite" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {visible.map(({ review, slot, key }) => (
+          <div key={key} className={slot === 1 ? "hidden sm:block" : slot === 2 ? "hidden lg:block" : undefined}>
+            <TestimonialCard {...review} color={colors[key % colors.length]} />
+          </div>
+        ))}
       </div>
 
       {reviews.length > 1 && (

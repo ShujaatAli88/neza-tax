@@ -45,7 +45,7 @@ const SECTIONS = [
   },
   {
     id: "dental-vision",
-    color: "var(--color-ink)",
+    color: "var(--color-business)",
     Icon: Smile,
     title: "Dental & Vision",
     body: "Dental and vision coverage for individuals and families, as well as options that can be included as part of an employee benefits package.",

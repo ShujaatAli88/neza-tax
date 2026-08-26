@@ -62,25 +62,40 @@ export function Footer() {
         <nav aria-label="Footer">
           <p className="eyebrow mb-3 !text-[var(--color-chrome-muted)]">Explore</p>
           <ul className="space-y-2">
-            {FOOTER_LINKS.company.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-[var(--color-chrome-muted)] hover:text-[var(--color-eggshell)]"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            {FOOTER_LINKS.company.map((l) =>
+              l.external ? (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--color-chrome-muted)] hover:text-[var(--color-eggshell)]"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ) : (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-[var(--color-chrome-muted)] hover:text-[var(--color-eggshell)]"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ),
+            )}
           </ul>
         </nav>
       </Container>
 
       <div className="border-t border-[var(--color-chrome-2)]">
         <Container className="py-6">
-          <p className="eyebrow mb-3 !text-[var(--color-chrome-muted)]">Licensing</p>
-          <InsuranceDisclosure onDark />
-          <MortgageDisclosure variant="compact" onDark className="mt-2" />
+          <p className="eyebrow mb-4 !text-[var(--color-chrome-muted)]">Licensing</p>
+          <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+            <InsuranceDisclosure onDark />
+            <MortgageDisclosure variant="compact" onDark />
+          </div>
         </Container>
       </div>
 

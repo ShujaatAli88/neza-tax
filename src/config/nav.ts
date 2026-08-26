@@ -18,7 +18,7 @@ export const NAV: NavItem[] = [
   { label: "Client Portal", href: "https://nezatax.proclient.com", external: true },
 ];
 
-export const FOOTER_LINKS = {
+export const FOOTER_LINKS: { company: NavItem[]; legal: NavItem[] } = {
   company: [
     { label: "Tax Services", href: "/tax-services" },
     { label: "Business Services", href: "/business-services" },
@@ -26,6 +26,7 @@ export const FOOTER_LINKS = {
     { label: "Mortgage Loans", href: "/mortgage" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
+    { label: "Client Portal", href: "https://nezatax.proclient.com", external: true },
   ],
   legal: [
     { label: "Privacy Policy", href: "/legal/privacy" },

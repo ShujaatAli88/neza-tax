@@ -16,6 +16,7 @@
   --color-tax: #b7882d; /* gold primary */
   --color-insure: #b99a4e; /* gold mid */
   --color-mortgage: #cb9f45; /* gold light */
+  --color-business: #a9822e; /* gold, deeper — Business Services accent */
   --color-seal: #b99a4e; /* gold mid — credentials */
 
   --radius-card: 16px;
@@ -284,31 +285,34 @@
      translated to vw-based clamps so they scale the same way). Padding lives
      here (not as py-* utilities) for the same cascade-layer reason as the
      margins above. */
+  /* Heights reduced ~12% from the client-approved reference proportions
+     above, per follow-up feedback ("Who We Are needs to sit higher on
+     first load") — still driven by vw-based clamps, never vh/svh. */
   .hero-viewport {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    min-height: clamp(380px, 55vw, 420px);
+    padding-top: 1.75rem;
+    padding-bottom: 1.75rem;
+    min-height: clamp(335px, 48vw, 370px);
   }
 
   @media (min-width: 768px) {
     .hero-viewport {
-      padding-top: 2.25rem;
-      padding-bottom: 2.25rem;
-      min-height: clamp(420px, 42vw, 460px);
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      min-height: clamp(370px, 37vw, 405px);
     }
   }
 
   @media (min-width: 1024px) {
     .hero-viewport {
-      padding-top: 2.5rem;
-      padding-bottom: 2.5rem;
-      min-height: clamp(460px, 36vw, 500px);
+      padding-top: 2.25rem;
+      padding-bottom: 2.25rem;
+      min-height: clamp(405px, 32vw, 440px);
     }
   }
 
   @media (min-width: 1280px) {
     .hero-viewport {
-      min-height: clamp(480px, 38vw, 600px);
+      min-height: clamp(420px, 33vw, 528px);
     }
   }
 }

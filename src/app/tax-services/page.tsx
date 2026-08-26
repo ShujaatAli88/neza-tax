@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { User, Building2, FileEdit, History } from "lucide-react";
+import { User, Building2, FileEdit, History, FileSearch, Scale } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
@@ -7,9 +7,31 @@ import { IconBadge } from "@/components/ui/IconBadge";
 import { PageHeader } from "@/components/content/PageHeader";
 import { TestimonialCard } from "@/components/content/TestimonialCard";
 import { YearRoundSupportBlock } from "@/components/content/YearRoundSupportBlock";
+import { CalendarDateBadge } from "@/components/content/CalendarDateBadge";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, serviceSchema, breadcrumbSchema } from "@/lib/schema";
+import { getUpcomingDeadlines, urgencyColor } from "@/config/deadlines";
 import { telHref } from "@/lib/contact";
+
+const DEADLINE_ACCENTS = ["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"];
+
+// Moved from the homepage's "Why clients choose Neza" — these two read as
+// selling points specifically in a tax context, less so sitting alongside
+// the company-wide reasons that replaced them on the homepage.
+const TAX_REASONS = [
+  {
+    color: "var(--color-tax)",
+    Icon: FileSearch,
+    title: "Experienced, Thorough Tax Preparation",
+    body: "We take the time to review your tax situation carefully, identify potential issues and opportunities, and help you understand your return.",
+  },
+  {
+    color: "var(--color-mortgage)",
+    Icon: Scale,
+    title: "Help When Tax Problems Arise",
+    body: "Late returns, amended returns, IRS notices, and payment options. If you're behind, we'll help you understand your options and determine the next steps.",
+  },
+];
 
 // This page's 3 testimonials are curated separately from the shared
 // TESTIMONIALS list (used by the homepage carousel) so a swap here doesn't
@@ -64,7 +86,7 @@ const SECTIONS = [
   },
   {
     id: "amended",
-    color: "var(--color-ink)",
+    color: "var(--color-business)",
     Icon: FileEdit,
     title: "Amended Returns",
     body: "Need to correct a previously filed return? We can review the original return, identify necessary changes, and prepare amended federal or state returns when appropriate.",
@@ -79,6 +101,8 @@ const SECTIONS = [
 ];
 
 export default function TaxServicesPage() {
+  const upcoming = getUpcomingDeadlines(new Date(), 3);
+
   return (
     <>
       <JsonLd
@@ -96,6 +120,34 @@ export default function TaxServicesPage() {
         sub="Serving individuals and businesses locally and remotely."
       />
 
+      {/* Upcoming deadlines — moved here from the homepage */}
+      <section className="band-white section pt-0">
+        <Container>
+          <SectionEyebrow>Upcoming deadlines</SectionEyebrow>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            {upcoming.map((d, i) => {
+              const urgency = urgencyColor(d.daysAway);
+              const badgeColor = DEADLINE_ACCENTS[i % DEADLINE_ACCENTS.length];
+              return (
+                <div key={`${d.md}-${d.title}`} className="card-surface group flex items-start gap-4 p-5">
+                  <CalendarDateBadge
+                    month={d.date.toLocaleDateString("en-US", { month: "short" })}
+                    day={d.date.getDate()}
+                    color={badgeColor}
+                  />
+                  <div>
+                    <p className="text-[0.95rem] font-medium">{d.title}</p>
+                    <p className="mt-1.5 font-mono text-[0.8rem] font-medium" style={{ color: urgency }}>
+                      {d.daysAway} day{d.daysAway === 1 ? "" : "s"} away
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Container>
+      </section>
+
       <section className="band-white section relative overflow-hidden pt-0">
         <SectionDecor colors={["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"]} />
         <Container className="relative z-10">
@@ -110,6 +162,28 @@ export default function TaxServicesPage() {
                 <IconBadge icon={s.Icon} color={s.color} />
                 <h3 className="mt-5 text-[1.15rem]">{s.title}</h3>
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Why choose Neza for tax — moved from the homepage's "Why clients
+          choose Neza," which now carries company-wide reasons instead. */}
+      <section className="band-white section relative overflow-hidden pt-0">
+        <SectionDecor colors={["var(--color-tax)", "var(--color-mortgage)"]} />
+        <Container className="relative z-10">
+          <SectionEyebrow>Why choose Neza for tax</SectionEyebrow>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {TAX_REASONS.map((reason) => (
+              <div
+                key={reason.title}
+                className="card-surface group p-7"
+                style={{ borderTop: `4px solid ${reason.color}` }}
+              >
+                <IconBadge icon={reason.Icon} color={reason.color} />
+                <h3 className="mt-5 text-[1.15rem]">{reason.title}</h3>
+                <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{reason.body}</p>
               </div>
             ))}
           </div>

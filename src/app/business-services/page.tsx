@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const SECTIONS = [
   {
     id: "bookkeeping",
-    color: "var(--color-ink)",
+    color: "var(--color-business)",
     Icon: BookOpen,
     title: "Bookkeeping Services",
     body: "QuickBooks setup, ongoing bookkeeping, account reconciliation, financial reporting, and clean-up services to help keep your books accurate and organized.",
@@ -53,7 +53,7 @@ const SECTIONS = [
   },
   {
     id: "registered-agent",
-    color: "var(--color-ink)",
+    color: "var(--color-business)",
     Icon: MapPin,
     title: "Registered Agent Services",
     body: "Registered agent services for California businesses, providing a reliable point of contact for official state and legal correspondence.",

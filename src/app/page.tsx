@@ -1,33 +1,27 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import {
-  ArrowRight,
   Check,
   Calculator,
   Umbrella,
   Home,
   Landmark,
-  FileSearch,
+  Award,
   PhoneCall,
-  Scale,
+  Layers,
 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { IconBadge } from "@/components/ui/IconBadge";
-import { EqualHousingIcon } from "@/components/ui/EqualHousingIcon";
 import { ServiceCard } from "@/components/content/ServiceCard";
 import { PhotoFeatureBlock } from "@/components/content/PhotoFeatureBlock";
-import { YearRoundSupportBlock } from "@/components/content/YearRoundSupportBlock";
 import { ReviewsCarousel } from "@/components/content/ReviewsCarousel";
-import { CalendarDateBadge } from "@/components/content/CalendarDateBadge";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, organizationSchema } from "@/lib/schema";
 import { TESTIMONIALS } from "@/content/testimonials";
 import { GOOGLE_REVIEWS } from "@/content/googleReviews";
-import { getUpcomingDeadlines, urgencyColor } from "@/config/deadlines";
 import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
 
@@ -37,7 +31,7 @@ export const metadata: Metadata = {
     "Tax preparation, insurance and home loans from Neza Financial Group — tax services, business services, insurance and mortgage loans in one place.",
 };
 
-const ACCENTS = ["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)", "var(--color-ink)"];
+const ACCENTS = ["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)", "var(--color-business)"];
 
 const CREDENTIALS = [
   {
@@ -51,16 +45,13 @@ const CREDENTIALS = [
     key: "efile",
     name: "IRS Authorized e-file Provider",
     subtext: ["Authorized electronic filing provider"],
-    color: "var(--color-ink)",
+    color: "var(--color-business)",
     image: { src: "/images/badge-efile.png", width: 611, height: 265 },
   },
   {
     key: "insurance",
     name: "Covered California Certified Insurance Agent",
-    subtext: [
-      "Neza Financial & Insurance Services, a DBA of Neza Financial Group LLC",
-      `CA Insurance Lic. #${BUSINESS.licenses.caInsurance}`,
-    ],
+    subtext: [`CA Insurance Lic. #${BUSINESS.licenses.caInsurance}`],
     color: "var(--color-insure)",
     image: { src: "/images/covered-ca-lia-badge.png", width: 1183, height: 238 },
   },
@@ -72,13 +63,11 @@ const CREDENTIALS = [
       "Mortgage loan origination through C2 Financial Corporation",
     ],
     color: "var(--color-mortgage)",
-    customIcon: <EqualHousingIcon />,
+    image: { src: "/images/nmls-logo.png", width: 106, height: 75 },
   },
 ];
 
 export default function HomePage() {
-  const upcoming = getUpcomingDeadlines(new Date(), 3);
-
   return (
     <>
       <JsonLd data={organizationSchema()} />
@@ -86,17 +75,17 @@ export default function HomePage() {
       {/* Hero */}
       <section className="hero-viewport relative flex items-center overflow-hidden">
         <Image
-          src="/images/tax-forms-planning-hero.jpg"
+          src="/images/hero-tax-financial-new.jpg"
           alt=""
           fill
           priority
           sizes="100vw"
           className="hero-ambient object-cover"
-          style={{ objectPosition: "68% 25%" }}
+          style={{ objectPosition: "60% 45%" }}
         />
         {/* Directional duotone grade — densest behind the text column, clearing
-            toward the right so the photo (and the "Need help?" note) actually
-            reads, plus a soft vignette so the frame feels art-directed. */}
+            toward the right so the photo actually reads, plus a soft vignette
+            so the frame feels art-directed. */}
         <div
           aria-hidden="true"
           className="absolute inset-0"
@@ -168,7 +157,7 @@ export default function HomePage() {
       {/* Proudly serving the community */}
       <section
         id="community"
-        className="relative scroll-mt-16 overflow-hidden bg-[var(--color-chrome)] py-16 text-[var(--color-eggshell)] sm:py-20"
+        className="relative scroll-mt-16 overflow-hidden bg-[var(--color-chrome)] py-14 text-[var(--color-eggshell)] sm:py-16"
       >
         <div
           aria-hidden="true"
@@ -195,10 +184,6 @@ export default function HomePage() {
             <Button href="/about" variant="invert" className="mt-7">
               Meet Neza Financial Group
             </Button>
-            <p className="mt-6 text-[0.78rem] text-[var(--color-chrome-muted)]">
-              This website is independently owned and maintained. It is not maintained by, or
-              affiliated with, Covered California.
-            </p>
           </div>
 
           <div className="relative mx-auto h-full min-h-[260px] w-full max-w-[380px] overflow-hidden rounded-[20px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]">
@@ -215,54 +200,6 @@ export default function HomePage() {
               style={{ background: "linear-gradient(0deg, rgba(19,22,24,0.4), transparent 55%)" }}
             />
           </div>
-        </Container>
-      </section>
-
-      {/* Upcoming deadlines strip */}
-      <section className="band-ledger section pt-10">
-        <Container>
-          <div className="flex items-baseline justify-between">
-            <SectionEyebrow>Upcoming deadlines</SectionEyebrow>
-            <Link
-              href="/tax-services"
-              className="hidden items-center gap-1 text-[0.9rem] font-medium underline underline-offset-4 sm:inline-flex"
-            >
-              Tax services <ArrowRight size={14} aria-hidden="true" />
-            </Link>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {upcoming.map((d, i) => {
-              const urgency = urgencyColor(d.daysAway);
-              const badgeColor = ACCENTS[i % ACCENTS.length];
-              return (
-                <Link
-                  key={`${d.md}-${d.title}`}
-                  href="/tax-services"
-                  className="card-surface group flex items-start gap-4 p-5"
-                >
-                  <CalendarDateBadge
-                    month={d.date.toLocaleDateString("en-US", { month: "short" })}
-                    day={d.date.getDate()}
-                    color={badgeColor}
-                  />
-                  <div>
-                    <p className="text-[0.95rem] font-medium">{d.title}</p>
-                    <p className="mt-1.5 font-mono text-[0.8rem] font-medium" style={{ color: urgency }}>
-                      {d.daysAway} day{d.daysAway === 1 ? "" : "s"} away
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-
-          <Link
-            href="/tax-services"
-            className="mt-6 inline-flex items-center gap-1 text-[0.9rem] font-medium underline underline-offset-4 sm:hidden"
-          >
-            Tax services <ArrowRight size={14} aria-hidden="true" />
-          </Link>
         </Container>
       </section>
 
@@ -345,7 +282,12 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Why clients choose Neza */}
+      {/* Why clients choose Neza — company-wide reasons, not tax-specific,
+          since this sits right after the four equal service cards. The two
+          retired tax-specific reasons moved to /tax-services.
+          NOTE (flag, not acted on): "Who We Serve" below repeats some of
+          "Who We Are" above it — worth a call on whether both stay once the
+          rest of this page settles. */}
       <section className="band-white section relative overflow-hidden">
         <SectionDecor colors={ACCENTS.slice(0, 3)} />
 
@@ -355,9 +297,9 @@ export default function HomePage() {
             {[
               {
                 color: "var(--color-tax)",
-                Icon: FileSearch,
-                title: "Experienced, Thorough Tax Preparation",
-                body: "We take the time to review your tax situation carefully, identify potential issues and opportunities, and help you understand your return.",
+                Icon: Award,
+                title: "Experience You Can Rely On",
+                body: "Years of experience across tax, business, insurance, and mortgage services — one team you can count on for accurate, dependable guidance.",
               },
               {
                 color: "var(--color-insure)",
@@ -367,9 +309,9 @@ export default function HomePage() {
               },
               {
                 color: "var(--color-mortgage)",
-                Icon: Scale,
-                title: "Help When Tax Problems Arise",
-                body: "Late returns, amended returns, IRS notices, and payment options. If you're behind, we'll help you understand your options and determine the next steps.",
+                Icon: Layers,
+                title: "Multiple Services, One Trusted Team",
+                body: "Tax, business, insurance, and mortgage needs handled by one organization — no juggling multiple providers or re-explaining your situation.",
               },
             ].map((reason) => (
               <div
@@ -383,13 +325,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </Container>
-      </section>
-
-      {/* Year-round tax support */}
-      <section className="band-ledger section pt-0">
-        <Container>
-          <YearRoundSupportBlock />
         </Container>
       </section>
 
@@ -443,18 +378,20 @@ export default function HomePage() {
                   className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-[0.1] transition-opacity duration-300 group-hover:opacity-[0.18]"
                   style={{ background: `radial-gradient(120% 100% at 50% 0%, ${c.color}, transparent 70%)` }}
                 />
-                <div className="relative flex h-24 w-full items-center justify-center rounded-xl bg-white">
-                  {c.image ? (
-                    <Image
-                      src={c.image.src}
-                      alt={c.name}
-                      width={c.image.width}
-                      height={c.image.height}
-                      className="max-h-16 w-auto max-w-[85%] object-contain transition-transform duration-200 group-hover:scale-105"
-                    />
-                  ) : (
-                    c.customIcon
-                  )}
+                {/* Every card gets the identical h-20/w-40 bounding box — a
+                    fixed maximum display area, not just a max-height — so
+                    logos with very different source aspect ratios (the wide
+                    Covered CA badge vs. the squarer CTEC/e-file badges) read
+                    as the same visual weight instead of some floating small
+                    in whitespace while another runs edge-to-edge. */}
+                <div className="relative flex h-20 w-40 items-center justify-center rounded-xl bg-white">
+                  <Image
+                    src={c.image.src}
+                    alt={c.name}
+                    width={c.image.width}
+                    height={c.image.height}
+                    className="max-h-full max-w-full object-contain transition-transform duration-200 group-hover:scale-105"
+                  />
                 </div>
                 <p className="relative mt-5 text-[0.98rem] font-semibold">{c.name}</p>
                 {c.subtext.map((line, i) => (
@@ -468,6 +405,11 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+
+          <p className="prose-measure relative mx-auto mt-8 text-center text-[0.78rem] text-[var(--color-ink-60)]">
+            This website is independently owned and maintained. It is not maintained by, or
+            affiliated with, Covered California.
+          </p>
         </Container>
       </section>
     </>

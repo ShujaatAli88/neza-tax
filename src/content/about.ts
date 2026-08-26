@@ -49,7 +49,7 @@ export const ABOUT_CONTENT = {
       body: "Bookkeeping, payroll, business formation, S-Corporation elections, business compliance, and ongoing support for business owners.",
       cta: "Explore Business Services",
       href: "/business-services",
-      color: "var(--color-ink)",
+      color: "var(--color-business)",
     },
     {
       title: "Life & Health Insurance",
