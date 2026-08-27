@@ -128,14 +128,52 @@ export const DEADLINES: Deadline[] = [
   },
 ];
 
-function resolveNextDate(md: string, from: Date): Date {
+// The firm's local timezone — deadlines are anchored here regardless of the
+// server's runtime timezone (typically UTC on most hosts) or the visitor's
+// timezone, so "days away" doesn't shift depending on who/where is rendering.
+export const FIRM_TIMEZONE = "America/Los_Angeles";
+
+interface CalendarDate {
+  year: number;
+  month: number; // 1-12
+  day: number;
+}
+
+// Reads the Y/M/D for a given instant AS SEEN in `timeZone`, via Intl rather
+// than a date library. This is what actually anchors "today" to the firm's
+// timezone instead of the server's.
+function calendarDateInTimeZone(instant: Date, timeZone: string): CalendarDate {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(instant);
+
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value);
+  return { year: get("year"), month: get("month"), day: get("day") };
+}
+
+// UTC-midnight timestamp for a calendar date — used ONLY for day-count
+// arithmetic. Anchoring both sides to UTC (which has no DST) instead of
+// diffing local-time Date objects is what makes the day math immune to
+// spring-forward/fall-back 23/25-hour days; local timestamps would drift by
+// one day for ranges that cross a DST transition.
+function utcMidnight(d: CalendarDate): number {
+  return Date.UTC(d.year, d.month - 1, d.day);
+}
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+function daysBetween(from: CalendarDate, to: CalendarDate): number {
+  return Math.round((utcMidnight(to) - utcMidnight(from)) / MS_PER_DAY);
+}
+
+function resolveNextOccurrence(md: string, today: CalendarDate): CalendarDate {
   const [month, day] = md.split("-").map(Number);
-  let year = from.getFullYear();
-  let candidate = new Date(year, month - 1, day);
-  if (candidate < from) {
-    candidate = new Date(year + 1, month - 1, day);
-  }
-  return candidate;
+  const thisYear: CalendarDate = { year: today.year, month, day };
+  if (daysBetween(today, thisYear) >= 0) return thisYear;
+  return { year: today.year + 1, month, day };
 }
 
 export interface ResolvedDeadline extends Deadline {
@@ -143,26 +181,44 @@ export interface ResolvedDeadline extends Deadline {
   daysAway: number;
 }
 
+// `from` defaults to "right now, as seen in the firm's timezone" — pass it
+// explicitly only for testing. Deadlines that have already passed today are
+// never returned: resolveNextOccurrence always rolls a passed date forward
+// to next year, including across the New Year boundary.
 export function getUpcomingDeadlines(
-  from: Date,
   count: number = DEADLINES.length,
+  from: Date = new Date(),
 ): ResolvedDeadline[] {
+  const today = calendarDateInTimeZone(from, FIRM_TIMEZONE);
+
   const withDates = DEADLINES.map((d) => {
-    const date = resolveNextDate(d.md, from);
-    const daysAway = Math.ceil(
-      (date.getTime() - from.getTime()) / (1000 * 60 * 60 * 24),
-    );
+    const occurrence = resolveNextOccurrence(d.md, today);
+    const daysAway = daysBetween(today, occurrence);
+    // Representational Date for display formatting (month/day) only — never
+    // used for arithmetic, so its own local timezone doesn't matter here.
+    const date = new Date(occurrence.year, occurrence.month - 1, occurrence.day);
     return { ...d, date, daysAway };
   });
-  return withDates.sort((a, b) => a.date.getTime() - b.date.getTime()).slice(0, count);
+
+  return withDates
+    .sort((a, b) => a.daysAway - b.daysAway)
+    .slice(0, count);
 }
 
-export function getNextDeadline(from: Date): ResolvedDeadline {
-  return getUpcomingDeadlines(from, 1)[0];
+export function getNextDeadline(from?: Date): ResolvedDeadline {
+  return getUpcomingDeadlines(1, from)[0];
 }
 
 export function urgencyColor(daysAway: number): string {
   if (daysAway < 14) return "var(--color-mortgage)";
   if (daysAway <= 30) return "var(--color-seal)";
   return "var(--color-tax)";
+}
+
+// "0 days away" / "1 days away" read wrong — this is the one place that
+// wording is decided, so every consumer stays consistent.
+export function formatDaysAway(daysAway: number): string {
+  if (daysAway === 0) return "Due today";
+  if (daysAway === 1) return "1 day away";
+  return `${daysAway} days away`;
 }

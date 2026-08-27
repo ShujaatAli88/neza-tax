@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { CalendarClock, ArrowRight } from "lucide-react";
 import { IconBadge } from "@/components/ui/IconBadge";
+import { BUSINESS } from "@/config/business";
 
 export function YearRoundSupportBlock() {
   return (
@@ -27,19 +27,22 @@ export function YearRoundSupportBlock() {
           year-round for tax preparation, amended returns, IRS notices, business tax matters, and
           other tax needs.
         </p>
-        <Link
-          href="/tax-services"
+        <a
+          href={BUSINESS.schedulerUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Schedule an appointment — from Year-Round Tax Support"
           className="mt-5 inline-flex items-center gap-2 text-[0.9rem] font-semibold"
           style={{ color: "var(--color-seal)" }}
         >
-          Explore Tax Services
+          Schedule an Appointment
           <span
             className="flex h-6 w-6 items-center justify-center rounded-full"
             style={{ backgroundColor: "color-mix(in srgb, var(--color-seal), transparent 88%)" }}
           >
             <ArrowRight size={13} aria-hidden="true" />
           </span>
-        </Link>
+        </a>
       </div>
     </div>
   );

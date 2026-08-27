@@ -8,6 +8,7 @@ import { PhotoFeatureBlock } from "@/components/content/PhotoFeatureBlock";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { telHref } from "@/lib/contact";
+import { BUSINESS } from "@/config/business";
 
 export const metadata: Metadata = {
   title: "Business Services — Bookkeeping, Payroll & Business Formation",
@@ -49,7 +50,7 @@ const SECTIONS = [
     color: "var(--color-insure)",
     Icon: ClipboardList,
     title: "Business Compliance & Support",
-    body: "Ongoing assistance with business filings, including Statement of Information filings, entity compliance, tax-related requirements, and other administrative needs that arise as your business grows.",
+    body: "Ongoing assistance with business filings, including Statements of Information, entity compliance requirements, and other administrative filings needed to keep your business in good standing.",
   },
   {
     id: "registered-agent",
@@ -148,10 +149,15 @@ export default function BusinessServicesPage() {
 
       <section className="section bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
         <Container className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
-          <h2 className="text-[var(--color-eggshell)]">Let's talk about the business.</h2>
+          <h2 className="text-[var(--color-eggshell)]">Let's talk about your business.</h2>
           <div className="flex flex-wrap gap-4">
-            <Button href="/contact" variant="invert">
-              Request an Appointment
+            <Button
+              href={BUSINESS.schedulerUrl}
+              variant="invert"
+              external
+              ariaLabel="Schedule an appointment — Business Services"
+            >
+              Schedule an Appointment
             </Button>
             <Button href={telHref()} variant="onChrome">
               Call Us

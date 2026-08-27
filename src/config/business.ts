@@ -8,8 +8,8 @@ export const BUSINESS = {
   ownerShort: "Jose",
 
   phone: "(760) 560-3160",
-  phoneRaw: "+17605603160", // E.164 — used in schema.org structured data
-  phoneTel: "7605603160", // used in tel: links, per client spec
+  phoneRaw: "+17605603160", // E.164 — used in schema.org structured data and all tel: links
+  phoneTel: "7605603160", // used in sms: links only
   email: "info@nezafinancial.com",
 
   // TODO_CONFIRM — two addresses exist across owned domains. Using the Google Business Profile /
@@ -53,6 +53,7 @@ export const BUSINESS = {
   // reviews transcribed into src/content/googleReviews.ts exactly.
   googleRating: { rating: 5.0, count: 11 } as { rating: number; count: number } | null,
   c2PrequalUrl: "https://www.c2financialcorp.com/josegonzalez",
+  schedulerUrl: "https://nezatax.proclient.com/c/appointments",
 
   photos: {
     jose: null as string | null,

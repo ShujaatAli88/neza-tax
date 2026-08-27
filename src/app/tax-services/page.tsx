@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { User, Building2, FileEdit, History, FileSearch, Scale } from "lucide-react";
+import { User, Building2, FileEdit, IdCard, FileSearch, Scale } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
@@ -10,8 +10,16 @@ import { YearRoundSupportBlock } from "@/components/content/YearRoundSupportBloc
 import { CalendarDateBadge } from "@/components/content/CalendarDateBadge";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, serviceSchema, breadcrumbSchema } from "@/lib/schema";
-import { getUpcomingDeadlines, urgencyColor } from "@/config/deadlines";
+import { getUpcomingDeadlines, urgencyColor, formatDaysAway } from "@/config/deadlines";
+import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
+
+// Page is statically generated; this keeps the Upcoming Deadlines counters
+// from freezing at build time — Next regenerates it at most once an hour so
+// "days away" (and the eventual roll into next year) stays correct without
+// needing a redeploy. Deadlines only move at day boundaries, so hourly is
+// comfortably fresh without forcing this page to render per-request.
+export const revalidate = 3600;
 
 const DEADLINE_ACCENTS = ["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)"];
 
@@ -85,23 +93,23 @@ const SECTIONS = [
     ),
   },
   {
-    id: "amended",
+    id: "amended-prior-year",
     color: "var(--color-business)",
     Icon: FileEdit,
-    title: "Amended Returns",
-    body: "Need to correct a previously filed return? We can review the original return, identify necessary changes, and prepare amended federal or state returns when appropriate.",
+    title: "Amended & Prior-Year Returns",
+    body: "Need to correct a previously filed return or catch up on unfiled years? We can prepare amended federal and state returns and help bring prior-year tax filings up to date.",
   },
   {
-    id: "prior-year",
+    id: "itin",
     color: "var(--color-seal)",
-    Icon: History,
-    title: "Prior-Year Returns",
-    body: "Behind on filing? We can help prepare prior-year tax returns and work with you to get your tax filings back on track.",
+    Icon: IdCard,
+    title: "ITIN Application & Renewal",
+    body: "Assistance with new Individual Taxpayer Identification Number (ITIN) applications and renewals, including preparation of Form W-7 and required supporting documentation.",
   },
 ];
 
 export default function TaxServicesPage() {
-  const upcoming = getUpcomingDeadlines(new Date(), 3);
+  const upcoming = getUpcomingDeadlines(3);
 
   return (
     <>
@@ -118,6 +126,16 @@ export default function TaxServicesPage() {
         eyebrow="Neza Tax Services"
         title="Professional tax preparation for individuals and businesses"
         sub="Serving individuals and businesses locally and remotely."
+        cta={
+          <Button
+            href={BUSINESS.schedulerUrl}
+            variant="primary"
+            external
+            ariaLabel="Schedule an appointment — Tax Services"
+          >
+            Schedule an Appointment
+          </Button>
+        }
       />
 
       {/* Upcoming deadlines — moved here from the homepage */}
@@ -138,7 +156,7 @@ export default function TaxServicesPage() {
                   <div>
                     <p className="text-[0.95rem] font-medium">{d.title}</p>
                     <p className="mt-1.5 font-mono text-[0.8rem] font-medium" style={{ color: urgency }}>
-                      {d.daysAway} day{d.daysAway === 1 ? "" : "s"} away
+                      {formatDaysAway(d.daysAway)}
                     </p>
                   </div>
                 </div>
@@ -222,8 +240,13 @@ export default function TaxServicesPage() {
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-4">
-            <Button href="/contact" variant="invert">
-              Request an Appointment
+            <Button
+              href={BUSINESS.schedulerUrl}
+              variant="invert"
+              external
+              ariaLabel="Schedule an appointment — Ready to Get Started"
+            >
+              Schedule an Appointment
             </Button>
             <Button href={telHref()} variant="onChrome">
               Call Us

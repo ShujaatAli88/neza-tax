@@ -63,7 +63,7 @@ const CREDENTIALS = [
       "Mortgage loan origination through C2 Financial Corporation",
     ],
     color: "var(--color-mortgage)",
-    image: { src: "/images/nmls-logo.png", width: 106, height: 75 },
+    image: { src: "/images/equal-housing-opportunity-black.png", width: 280, height: 300 },
   },
 ];
 

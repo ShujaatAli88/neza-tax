@@ -1,6 +1,8 @@
 import { BUSINESS } from "@/config/business";
 
-export const telHref = (raw: string = BUSINESS.phoneTel) => `tel:${raw}`;
+// E.164 (BUSINESS.phoneRaw) — dials correctly from international and VoIP
+// clients, unlike the bare national-format number this used to default to.
+export const telHref = (raw: string = BUSINESS.phoneRaw) => `tel:${raw}`;
 export const smsHref = (raw: string = BUSINESS.phoneTel) => `sms:${raw}`;
 export const mailtoHref = (address: string = BUSINESS.email) => `mailto:${address}`;
 

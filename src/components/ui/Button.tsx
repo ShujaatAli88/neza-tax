@@ -34,6 +34,7 @@ interface ButtonProps {
   type?: "button" | "submit";
   onClick?: () => void;
   external?: boolean;
+  ariaLabel?: string;
 }
 
 export function Button({
@@ -44,6 +45,7 @@ export function Button({
   type = "button",
   onClick,
   external,
+  ariaLabel,
 }: ButtonProps) {
   const classes = cn(base, variants[variant], className);
 
@@ -55,20 +57,21 @@ export function Button({
           target="_blank"
           rel="noopener noreferrer"
           className={classes}
+          aria-label={ariaLabel}
         >
           {children}
         </a>
       );
     }
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} aria-label={ariaLabel}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button type={type} onClick={onClick} className={classes}>
+    <button type={type} onClick={onClick} className={classes} aria-label={ariaLabel}>
       {children}
     </button>
   );
