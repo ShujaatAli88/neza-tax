@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { MapPin, Phone, Clock, Mail, Languages } from "lucide-react";
+import { MapPin, Phone, Clock, Mail, Languages, UploadCloud } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { IconBadge } from "@/components/ui/IconBadge";
@@ -134,6 +134,32 @@ export default function ContactPage() {
                 </Button>
               </div>
             </div>
+          </div>
+
+          {/* Secondary, supporting option — visually quieter than the form/sidebar
+              above (no colored border-top, no primary/invert button) since this
+              is not competing with the main contact form as a call to action.
+              SecureDock is a separate, no-login upload tool — never the Client
+              Portal — see src/config/business.ts. */}
+          <div className="mt-8 flex flex-col items-start gap-4 rounded-[var(--radius-card)] border border-[var(--color-rule)] bg-[var(--color-ledger)] p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <IconBadge icon={UploadCloud} color="var(--color-ink-60)" size="sm" />
+              <div>
+                <h3 className="text-[1rem]">Need to send us documents?</h3>
+                <p className="mt-1 text-[0.9rem] text-[var(--color-ink-60)]">
+                  Securely send documents without logging into the Client Portal.
+                </p>
+              </div>
+            </div>
+            <Button
+              href={BUSINESS.secureDockUrl}
+              variant="secondary"
+              external
+              ariaLabel="Upload documents securely via SecureDock (opens in a new tab)"
+              className="shrink-0"
+            >
+              Upload Documents Securely
+            </Button>
           </div>
         </Container>
       </section>

@@ -7,13 +7,11 @@ import {
   Phone as PhoneIcon,
   Mail,
   HelpCircle,
-  Calendar,
-  Clock,
   MessageSquare,
   CheckCircle2,
   MailCheck,
   PhoneCall,
-  CalendarCheck,
+  UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { BUSINESS } from "@/config/business";
@@ -71,8 +69,6 @@ export function ContactForm() {
       phone: String(data.get("phone") ?? "").trim(),
       email: String(data.get("email") ?? "").trim(),
       helpType: String(data.get("helpType") ?? "").trim(),
-      preferredDate: data.get("preferredDate"),
-      preferredTime: data.get("preferredTime"),
       message: data.get("message"),
       website: data.get("website"), // honeypot — real visitors never see or fill this in
     };
@@ -134,9 +130,9 @@ export function ContactForm() {
 
   if (status === "success") {
     const steps = [
-      { Icon: MailCheck, label: "We'll review your message" },
-      { Icon: CalendarCheck, label: "Confirm your appointment time" },
-      { Icon: PhoneCall, label: "Follow up by phone or email" },
+      { Icon: MailCheck, label: "We'll review your request" },
+      { Icon: UserCheck, label: "A team member follows up" },
+      { Icon: PhoneCall, label: "By phone or email — your choice" },
     ];
 
     return (
@@ -152,9 +148,12 @@ export function ContactForm() {
           <CheckCircle2 size={40} strokeWidth={2} aria-hidden="true" />
         </span>
 
-        <h3 className="mt-5 text-[1.4rem]">Message sent!</h3>
+        <h3 className="mt-5 text-[1.4rem]">Thank you.</h3>
         <p className="prose-measure mx-auto mt-2 text-[var(--color-ink-60)]">
-          We usually reply within one business day. If it&rsquo;s urgent, call{" "}
+          We&rsquo;ve received your request and will contact you as soon as possible.
+        </p>
+        <p className="prose-measure mx-auto mt-2 text-[var(--color-ink-60)]">
+          If it&rsquo;s urgent, call{" "}
           <a href={telHref()} className="font-medium underline underline-offset-4" style={{ color: "var(--color-tax)" }}>
             {BUSINESS.phone}
           </a>
@@ -236,25 +235,6 @@ export function ContactForm() {
         <FieldError field="helpType" />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="preferredDate" className={labelClass}>
-            Preferred Appointment Date
-          </label>
-          <FieldShell icon={Calendar}>
-            <input id="preferredDate" name="preferredDate" type="date" className={inputClass} />
-          </FieldShell>
-        </div>
-        <div>
-          <label htmlFor="preferredTime" className={labelClass}>
-            Preferred Appointment Time
-          </label>
-          <FieldShell icon={Clock}>
-            <input id="preferredTime" name="preferredTime" type="time" className={inputClass} />
-          </FieldShell>
-        </div>
-      </div>
-
       <div>
         <label htmlFor="message" className={labelClass}>
           Message / Additional Information
@@ -271,11 +251,11 @@ export function ContactForm() {
       )}
 
       <Button type="submit" variant="primary" className="w-full sm:w-auto">
-        {status === "submitting" ? "Sending…" : "Request Appointment"}
+        {status === "submitting" ? "Sending…" : "Request a Callback"}
       </Button>
 
       <div className="space-y-1.5 border-t border-[var(--color-rule)] pt-4 text-[0.8rem] text-[var(--color-ink-60)]">
-        <p>Submitting this form does not confirm an appointment. We will contact you to confirm availability.</p>
+        <p>Submitting this form does not guarantee immediate availability. A member of our team will follow up as soon as possible.</p>
         <p>
           Please do not include Social Security numbers, tax documents, financial account numbers, or
           other sensitive personal information in this form.

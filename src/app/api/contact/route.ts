@@ -55,8 +55,6 @@ export async function POST(req: NextRequest) {
   const phone = typeof body.phone === "string" ? body.phone.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim() : "";
   const helpType = typeof body.helpType === "string" ? body.helpType.trim() : "";
-  const preferredDate = typeof body.preferredDate === "string" ? body.preferredDate.trim() : "";
-  const preferredTime = typeof body.preferredTime === "string" ? body.preferredTime.trim() : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
 
   if (!name || !phone || !email || !helpType) {
@@ -91,10 +89,8 @@ export async function POST(req: NextRequest) {
         Phone: phone,
         Email: email,
         "How can we help": helpType,
-        "Preferred date": preferredDate || "(not provided)",
-        "Preferred time": preferredTime || "(not provided)",
         Message: message || "(none)",
-        _subject: `New appointment request — ${helpType}`,
+        _subject: `New contact request — ${helpType}`,
         _template: "table",
         _captcha: "false",
       }),

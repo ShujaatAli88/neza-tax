@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { HeartPulse, Stethoscope, Users, Smile, PiggyBank, Compass } from "lucide-react";
+import { HeartPulse, Stethoscope, Users, Smile, PiggyBank, Compass, HeartHandshake } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { IconBadge } from "@/components/ui/IconBadge";
@@ -8,13 +8,17 @@ import { PageHeader } from "@/components/content/PageHeader";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 import { JsonLd, serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { telHref } from "@/lib/contact";
+import { BUSINESS } from "@/config/business";
 
 export const metadata: Metadata = {
-  title: "Insurance & Financial Solutions",
+  title: "Insurance & Retirement Solutions",
   description:
     "Life insurance, health insurance, employee benefits, group health, dental & vision, and IRAs & retirement solutions from Neza Financial & Insurance Services.",
 };
 
+// `quoteSlug` feeds the /insurance/quote?type= URL param (see QUOTE_TYPES in
+// QuoteForm.tsx, which must stay in sync with these slugs). Medicare is
+// deliberately NOT a quote type — its button goes straight to the scheduler.
 const SECTIONS = [
   {
     id: "life",
@@ -23,7 +27,7 @@ const SECTIONS = [
     title: "Life Insurance",
     body: "Term and permanent life insurance options designed around your coverage needs, budget, and goals.",
     cta: "Get a Life Insurance Quote",
-    quoteType: "Life Insurance",
+    quoteSlug: "life",
   },
   {
     id: "health",
@@ -32,7 +36,16 @@ const SECTIONS = [
     title: "Health Insurance",
     body: "Individual and family health insurance options, including Covered California plans, to help you find coverage that fits your household's needs and budget.",
     cta: "Get a Health Insurance Quote",
-    quoteType: "Health Insurance",
+    quoteSlug: "health",
+  },
+  {
+    id: "medicare",
+    color: "var(--color-seal)",
+    Icon: HeartHandshake,
+    title: "Medicare",
+    body: "Guidance for individuals approaching or enrolled in Medicare, including help understanding Medicare health plan options and available coverage choices.",
+    cta: "Schedule a Medicare Consultation",
+    scheduler: true,
   },
   {
     id: "employee-benefits",
@@ -41,7 +54,7 @@ const SECTIONS = [
     title: "Employee Benefits",
     body: "Employee benefit solutions designed to help businesses offer valuable coverage to their employees, including group health insurance and other options for small and growing businesses.",
     cta: "Get an Employee Benefits Quote",
-    quoteType: "Employee Benefits",
+    quoteSlug: "employee-benefits",
   },
   {
     id: "dental-vision",
@@ -49,6 +62,8 @@ const SECTIONS = [
     Icon: Smile,
     title: "Dental & Vision",
     body: "Dental and vision coverage for individuals and families, as well as options that can be included as part of an employee benefits package.",
+    cta: "Get a Dental & Vision Quote",
+    quoteSlug: "dental-vision",
   },
   {
     id: "iras-retirement",
@@ -64,7 +79,7 @@ export default function InsurancePage() {
     <>
       <JsonLd
         data={serviceSchema({
-          name: "Insurance & Financial Solutions",
+          name: "Insurance & Retirement Solutions",
           description:
             "Life, health, employee benefits, group health, dental & vision, and IRAs & retirement solutions.",
           url: "/insurance",
@@ -73,8 +88,8 @@ export default function InsurancePage() {
       <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Insurance", path: "/insurance" }])} />
 
       <PageHeader
-        title="Insurance & Financial Solutions"
-        sub="Insurance and financial solutions for individuals, families, and businesses, with personalized guidance based on your needs and goals."
+        title="Insurance & Retirement Solutions"
+        sub="Insurance and retirement solutions for individuals, families, and businesses, with personalized guidance based on your needs and goals."
       />
 
       <Container className="pb-6 pt-1">
@@ -97,13 +112,21 @@ export default function InsurancePage() {
                 <p className="mt-3 text-[0.92rem] text-[var(--color-ink-60)]">{s.body}</p>
                 {s.cta && (
                   <div className="mt-auto pt-5">
-                    <Button
-                      href={`/insurance/quote?type=${encodeURIComponent(s.quoteType)}`}
-                      variant="secondary"
-                      className="w-full"
-                    >
-                      {s.cta}
-                    </Button>
+                    {s.scheduler ? (
+                      <Button
+                        href={BUSINESS.schedulerUrl}
+                        variant="secondary"
+                        external
+                        ariaLabel="Schedule a Medicare consultation"
+                        className="w-full"
+                      >
+                        {s.cta}
+                      </Button>
+                    ) : (
+                      <Button href={`/insurance/quote?type=${s.quoteSlug}`} variant="secondary" className="w-full">
+                        {s.cta}
+                      </Button>
+                    )}
                   </div>
                 )}
               </div>
@@ -136,7 +159,7 @@ export default function InsurancePage() {
           >
             <Image
               src="/images/covered-ca-lia-badge.png"
-              alt="Covered California — Licensed Insurance Agent"
+              alt="Covered California Licensed Insurance Agent"
               width={1183}
               height={238}
               className="h-auto w-[220px] shrink-0"
@@ -162,10 +185,15 @@ export default function InsurancePage() {
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-4">
-            <Button href="/contact" variant="invert">
-              Request an Appointment
+            <Button
+              href={BUSINESS.schedulerUrl}
+              variant="invert"
+              external
+              ariaLabel="Schedule an appointment — Insurance"
+            >
+              Schedule an Appointment
             </Button>
-            <Button href={telHref()} variant="onChrome">
+            <Button href={telHref()} variant="onChrome" ariaLabel={`Call us at ${BUSINESS.phone}`}>
               Call Us
             </Button>
           </div>

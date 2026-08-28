@@ -54,6 +54,10 @@ export const BUSINESS = {
   googleRating: { rating: 5.0, count: 11 } as { rating: number; count: number } | null,
   c2PrequalUrl: "https://www.c2financialcorp.com/josegonzalez",
   schedulerUrl: "https://nezatax.proclient.com/c/appointments",
+  // SecureDock — NOT the Client Portal. No login required; for sending
+  // documents securely without an account (prospective/new clients especially).
+  // Keep these two entirely separate everywhere they're linked.
+  secureDockUrl: "https://www.mysecuredock.com/m/upload?list=6a178015-c8d8-463a-9cbc-44c536195683",
 
   photos: {
     jose: null as string | null,

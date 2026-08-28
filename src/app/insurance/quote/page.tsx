@@ -11,7 +11,8 @@ import { telHref } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Get an Insurance Quote",
-  description: "Request a life, health, or employee benefits insurance quote from Neza Financial & Insurance Services.",
+  description:
+    "Request a life, health, employee benefits, or dental & vision insurance quote from Neza Financial & Insurance Services.",
 };
 
 export default function InsuranceQuotePage() {

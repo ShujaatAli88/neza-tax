@@ -33,7 +33,16 @@ export const metadata: Metadata = {
 
 const ACCENTS = ["var(--color-tax)", "var(--color-insure)", "var(--color-mortgage)", "var(--color-business)"];
 
-const CREDENTIALS = [
+interface Credential {
+  key: string;
+  name: string;
+  alt?: string;
+  subtext: string[];
+  color: string;
+  image: { src: string; width: number; height: number };
+}
+
+const CREDENTIALS: Credential[] = [
   {
     key: "ctec",
     name: "CTEC Registered Tax Preparer",
@@ -51,6 +60,7 @@ const CREDENTIALS = [
   {
     key: "insurance",
     name: "Covered California Certified Insurance Agent",
+    alt: "Covered California Licensed Insurance Agent",
     subtext: [`CA Insurance Lic. #${BUSINESS.licenses.caInsurance}`],
     color: "var(--color-insure)",
     image: { src: "/images/covered-ca-lia-badge.png", width: 1183, height: 238 },
@@ -387,7 +397,7 @@ export default function HomePage() {
                 <div className="relative flex h-20 w-40 items-center justify-center rounded-xl bg-white">
                   <Image
                     src={c.image.src}
-                    alt={c.name}
+                    alt={c.alt ?? c.name}
                     width={c.image.width}
                     height={c.image.height}
                     className="max-h-full max-w-full object-contain transition-transform duration-200 group-hover:scale-105"
@@ -406,9 +416,13 @@ export default function HomePage() {
             ))}
           </div>
 
-          <p className="prose-measure relative mx-auto mt-8 text-center text-[0.78rem] text-[var(--color-ink-60)]">
-            This website is independently owned and maintained. It is not maintained by, or
-            affiliated with, Covered California.
+          <p className="prose-measure relative mx-auto mt-8 max-w-2xl text-center text-[0.78rem] text-[var(--color-ink-60)]">
+            This website is owned and maintained by {BUSINESS.legalName}, which is solely
+            responsible for its content. This site is not maintained by or affiliated with
+            Covered California, and Covered California bears no responsibility for its content.
+            The e-mail addresses and telephone number that appear throughout this site belong to
+            {" "}
+            {BUSINESS.legalName} and cannot be used to contact Covered California.
           </p>
         </Container>
       </section>

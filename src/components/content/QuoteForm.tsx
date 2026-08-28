@@ -12,14 +12,35 @@ import {
   MapPinned,
   HeartPulse,
   Wallet,
-  MessageSquare,
   CheckCircle2,
+  Ruler,
+  Cigarette,
+  DollarSign,
+  CalendarClock,
+  Building2,
+  Hash,
+  Briefcase,
+  Shield,
+  Users,
+  Smile,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { BUSINESS } from "@/config/business";
 import { telHref } from "@/lib/contact";
 
-const QUOTE_TYPES = ["Life Insurance", "Health Insurance", "Employee Benefits"];
+// Slugs feed the /insurance/quote?type= URL param — must stay in sync with
+// the `quoteSlug` values on the cards in src/app/insurance/page.tsx. Medicare
+// is deliberately absent: Medicare inquiries only ever go through the
+// appointment scheduler, never this form.
+const QUOTE_TYPES = [
+  { slug: "life", label: "Life Insurance" },
+  { slug: "health", label: "Health Insurance" },
+  { slug: "employee-benefits", label: "Employee Benefits" },
+  { slug: "dental-vision", label: "Dental & Vision" },
+] as const;
+
+const BENEFITS_OF_INTEREST = ["Health", "Dental", "Vision", "Life Insurance", "Disability"];
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -50,13 +71,15 @@ function FieldShell({
 
 export function QuoteForm() {
   const searchParams = useSearchParams();
-  const requestedType = searchParams.get("type");
-  const initialType = QUOTE_TYPES.includes(requestedType ?? "") ? (requestedType as string) : "";
+  const requestedSlug = searchParams.get("type");
+  const initialSlug = QUOTE_TYPES.some((t) => t.slug === requestedSlug) ? (requestedSlug as string) : "";
 
-  const [quoteType, setQuoteType] = useState(initialType);
+  const [quoteSlug, setQuoteSlug] = useState(initialSlug);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const quoteLabel = QUOTE_TYPES.find((t) => t.slug === quoteSlug)?.label ?? "";
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -64,27 +87,72 @@ export function QuoteForm() {
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    const payload = {
-      name: String(data.get("name") ?? "").trim(),
-      phone: String(data.get("phone") ?? "").trim(),
-      email: String(data.get("email") ?? "").trim(),
-      quoteType: String(data.get("quoteType") ?? "").trim(),
-      dateOfBirth: data.get("dateOfBirth"),
-      zip: String(data.get("zip") ?? "").trim(),
-      healthConditions: data.get("healthConditions"),
-      householdIncome: data.get("householdIncome"),
-      message: data.get("message"),
-      website: data.get("website"), // honeypot — real visitors never see or fill this in
+    const str = (key: string) => String(data.get(key) ?? "").trim();
+
+    // Only fields relevant to the selected quote type are read here — fields
+    // for OTHER types were never rendered, so they're simply absent from
+    // `data` (React unmounts them entirely, it doesn't just hide them).
+    const payload: Record<string, unknown> = {
+      quoteType: quoteLabel,
+      firstName: str("firstName"),
+      lastName: str("lastName"),
+      email: str("email"),
+      phone: str("phone"),
+      zip: str("zip"),
+      preferredContact: str("preferredContact"),
+      notes: str("notes"),
+      website: str("website"), // honeypot — real visitors never see or fill this in
     };
 
     const errors: Record<string, string> = {};
-    if (!payload.name) errors.name = "Name is required.";
+    if (!payload.firstName) errors.firstName = "First name is required.";
+    if (!payload.lastName) errors.lastName = "Last name is required.";
     if (!payload.phone) errors.phone = "Phone is required.";
     if (!payload.email) errors.email = "Email is required.";
-    else if (!EMAIL_RE.test(payload.email)) errors.email = "Enter a valid email address.";
-    if (!payload.quoteType) errors.quoteType = "Please select a quote type.";
-    if (!payload.dateOfBirth) errors.dateOfBirth = "Date of birth is required.";
+    else if (!EMAIL_RE.test(payload.email as string)) errors.email = "Enter a valid email address.";
+    if (!quoteSlug) errors.quoteType = "Please select a quote type.";
     if (!payload.zip) errors.zip = "ZIP code is required.";
+    if (!payload.preferredContact) errors.preferredContact = "Please select a preferred contact method.";
+
+    if (quoteSlug === "life") {
+      payload.dateOfBirth = str("dateOfBirth");
+      payload.tobaccoUse = str("tobaccoUse");
+      payload.height = str("height");
+      payload.weight = str("weight");
+      payload.existingConditions = str("existingConditions");
+      payload.coverageAmount = str("coverageAmount");
+      payload.termDesired = str("termDesired");
+      if (!payload.dateOfBirth) errors.dateOfBirth = "Date of birth is required.";
+      if (!payload.tobaccoUse) errors.tobaccoUse = "Please select an option.";
+    }
+
+    if (quoteSlug === "health") {
+      payload.householdSize = str("householdSize");
+      payload.currentlyInsured = str("currentlyInsured");
+      payload.householdIncome = str("householdIncome");
+      if (!payload.householdSize) errors.householdSize = "Household size is required.";
+      if (!payload.currentlyInsured) errors.currentlyInsured = "Please select an option.";
+    }
+
+    if (quoteSlug === "employee-benefits") {
+      payload.businessName = str("businessName");
+      payload.numEmployees = str("numEmployees");
+      payload.industry = str("industry");
+      payload.currentCarrier = str("currentCarrier");
+      payload.benefitsOfInterest = BENEFITS_OF_INTEREST.filter((b) => data.get(`benefit-${b}`) === "on").join(", ");
+      if (!payload.businessName) errors.businessName = "Business name is required.";
+      if (!payload.numEmployees) errors.numEmployees = "Number of employees is required.";
+      if (!payload.industry) errors.industry = "Industry is required.";
+    }
+
+    if (quoteSlug === "dental-vision") {
+      payload.applicantType = str("applicantType");
+      payload.numPeople = str("numPeople");
+      payload.coverageInterest = str("coverageInterest");
+      if (!payload.applicantType) errors.applicantType = "Please select who needs coverage.";
+      if (!payload.numPeople) errors.numPeople = "Number of people is required.";
+      if (!payload.coverageInterest) errors.coverageInterest = "Please select a coverage option.";
+    }
 
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) {
@@ -177,16 +245,17 @@ export function QuoteForm() {
             id="quoteType"
             name="quoteType"
             required
+            aria-required="true"
             className={fieldClass("quoteType")}
-            value={quoteType}
-            onChange={(e) => setQuoteType(e.target.value)}
+            value={quoteSlug}
+            onChange={(e) => setQuoteSlug(e.target.value)}
           >
             <option value="" disabled>
               Select one
             </option>
-            {QUOTE_TYPES.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
+            {QUOTE_TYPES.map((t) => (
+              <option key={t.slug} value={t.slug}>
+                {t.label}
               </option>
             ))}
           </select>
@@ -194,14 +263,25 @@ export function QuoteForm() {
         <FieldError field="quoteType" />
       </div>
 
-      <div>
-        <label htmlFor="name" className={labelClass}>
-          Name *
-        </label>
-        <FieldShell icon={User}>
-          <input id="name" name="name" type="text" required className={fieldClass("name")} />
-        </FieldShell>
-        <FieldError field="name" />
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="firstName" className={labelClass}>
+            First Name *
+          </label>
+          <FieldShell icon={User}>
+            <input id="firstName" name="firstName" type="text" required aria-required="true" className={fieldClass("firstName")} />
+          </FieldShell>
+          <FieldError field="firstName" />
+        </div>
+        <div>
+          <label htmlFor="lastName" className={labelClass}>
+            Last Name *
+          </label>
+          <FieldShell icon={User}>
+            <input id="lastName" name="lastName" type="text" required aria-required="true" className={fieldClass("lastName")} />
+          </FieldShell>
+          <FieldError field="lastName" />
+        </div>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -210,7 +290,7 @@ export function QuoteForm() {
             Phone *
           </label>
           <FieldShell icon={PhoneIcon}>
-            <input id="phone" name="phone" type="tel" required className={fieldClass("phone")} />
+            <input id="phone" name="phone" type="tel" required aria-required="true" className={fieldClass("phone")} />
           </FieldShell>
           <FieldError field="phone" />
         </div>
@@ -219,28 +299,13 @@ export function QuoteForm() {
             Email *
           </label>
           <FieldShell icon={Mail}>
-            <input id="email" name="email" type="email" required className={fieldClass("email")} />
+            <input id="email" name="email" type="email" required aria-required="true" className={fieldClass("email")} />
           </FieldShell>
           <FieldError field="email" />
         </div>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="dateOfBirth" className={labelClass}>
-            Date of Birth *
-          </label>
-          <FieldShell icon={Calendar}>
-            <input
-              id="dateOfBirth"
-              name="dateOfBirth"
-              type="date"
-              required
-              className={fieldClass("dateOfBirth")}
-            />
-          </FieldShell>
-          <FieldError field="dateOfBirth" />
-        </div>
         <div>
           <label htmlFor="zip" className={labelClass}>
             ZIP Code *
@@ -253,54 +318,383 @@ export function QuoteForm() {
               inputMode="numeric"
               pattern="[0-9]{5}(-[0-9]{4})?"
               required
+              aria-required="true"
               className={fieldClass("zip")}
             />
           </FieldShell>
           <FieldError field="zip" />
         </div>
+        <div>
+          <label htmlFor="preferredContact" className={labelClass}>
+            Preferred Contact Method *
+          </label>
+          <FieldShell icon={PhoneIcon}>
+            <select
+              id="preferredContact"
+              name="preferredContact"
+              required
+              aria-required="true"
+              className={fieldClass("preferredContact")}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select one
+              </option>
+              <option value="Phone">Phone</option>
+              <option value="Email">Email</option>
+              <option value="Text">Text</option>
+            </select>
+          </FieldShell>
+          <FieldError field="preferredContact" />
+        </div>
       </div>
 
-      {quoteType === "Life Insurance" && (
-        <div>
-          <label htmlFor="healthConditions" className={labelClass}>
-            Health Conditions
-          </label>
-          <FieldShell icon={HeartPulse} align="top">
-            <textarea
-              id="healthConditions"
-              name="healthConditions"
-              rows={3}
-              className={inputClass}
-              placeholder="List any current health conditions, or leave blank if none."
-            />
-          </FieldShell>
-        </div>
-      )}
+      {/* Type-specific fields — a fully separate subtree per type, so React
+          unmounts (not just hides) whatever isn't the current selection.
+          aria-live announces the change to screen reader users when the
+          quote type selection swaps this section's contents. */}
+      <div aria-live="polite">
+        {quoteSlug === "life" && (
+          <fieldset className="space-y-5 border-t border-[var(--color-rule)] pt-5">
+            <legend className="mb-1 text-[0.85rem] font-semibold uppercase tracking-wide text-[var(--color-ink-60)]">
+              Life Insurance Details
+            </legend>
 
-      {quoteType === "Health Insurance" && (
-        <div>
-          <label htmlFor="householdIncome" className={labelClass}>
-            Household Income
-          </label>
-          <FieldShell icon={Wallet}>
-            <input
-              id="householdIncome"
-              name="householdIncome"
-              type="text"
-              inputMode="numeric"
-              className={inputClass}
-              placeholder="Approximate annual household income"
-            />
-          </FieldShell>
-        </div>
-      )}
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="dateOfBirth" className={labelClass}>
+                  Date of Birth *
+                </label>
+                <FieldShell icon={Calendar}>
+                  <input
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    type="date"
+                    required
+                    aria-required="true"
+                    className={fieldClass("dateOfBirth")}
+                  />
+                </FieldShell>
+                <FieldError field="dateOfBirth" />
+              </div>
+              <div>
+                <label htmlFor="tobaccoUse" className={labelClass}>
+                  Tobacco Use *
+                </label>
+                <FieldShell icon={Cigarette}>
+                  <select
+                    id="tobaccoUse"
+                    name="tobaccoUse"
+                    required
+                    aria-required="true"
+                    className={fieldClass("tobaccoUse")}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Select one
+                    </option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </FieldShell>
+                <FieldError field="tobaccoUse" />
+              </div>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="height" className={labelClass}>
+                  Height
+                </label>
+                <FieldShell icon={Ruler}>
+                  <input id="height" name="height" type="text" placeholder={`e.g. 5'10"`} className={inputClass} />
+                </FieldShell>
+              </div>
+              <div>
+                <label htmlFor="weight" className={labelClass}>
+                  Weight
+                </label>
+                <FieldShell icon={Ruler}>
+                  <input id="weight" name="weight" type="text" placeholder="e.g. 180 lbs" className={inputClass} />
+                </FieldShell>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="existingConditions" className={labelClass}>
+                Existing Health Conditions
+              </label>
+              <FieldShell icon={HeartPulse} align="top">
+                <textarea
+                  id="existingConditions"
+                  name="existingConditions"
+                  rows={3}
+                  className={inputClass}
+                  placeholder="List any current health conditions, or leave blank if none."
+                />
+              </FieldShell>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="coverageAmount" className={labelClass}>
+                  Desired Coverage Amount
+                </label>
+                <FieldShell icon={DollarSign}>
+                  <input
+                    id="coverageAmount"
+                    name="coverageAmount"
+                    type="text"
+                    placeholder="e.g. $250,000"
+                    className={inputClass}
+                  />
+                </FieldShell>
+              </div>
+              <div>
+                <label htmlFor="termDesired" className={labelClass}>
+                  Term Desired
+                </label>
+                <FieldShell icon={CalendarClock}>
+                  <select id="termDesired" name="termDesired" className={inputClass} defaultValue="">
+                    <option value="" disabled>
+                      Select one
+                    </option>
+                    <option value="10 years">10 years</option>
+                    <option value="15 years">15 years</option>
+                    <option value="20 years">20 years</option>
+                    <option value="30 years">30 years</option>
+                    <option value="Permanent">Permanent</option>
+                    <option value="Not sure">Not sure</option>
+                  </select>
+                </FieldShell>
+              </div>
+            </div>
+          </fieldset>
+        )}
+
+        {quoteSlug === "health" && (
+          <fieldset className="space-y-5 border-t border-[var(--color-rule)] pt-5">
+            <legend className="mb-1 text-[0.85rem] font-semibold uppercase tracking-wide text-[var(--color-ink-60)]">
+              Health Insurance Details
+            </legend>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="householdSize" className={labelClass}>
+                  Household Size *
+                </label>
+                <FieldShell icon={Users}>
+                  <input
+                    id="householdSize"
+                    name="householdSize"
+                    type="number"
+                    min={1}
+                    required
+                    aria-required="true"
+                    placeholder="Number of people needing coverage"
+                    className={fieldClass("householdSize")}
+                  />
+                </FieldShell>
+                <FieldError field="householdSize" />
+              </div>
+              <div>
+                <label htmlFor="currentlyInsured" className={labelClass}>
+                  Currently Insured? *
+                </label>
+                <FieldShell icon={Shield}>
+                  <select
+                    id="currentlyInsured"
+                    name="currentlyInsured"
+                    required
+                    aria-required="true"
+                    className={fieldClass("currentlyInsured")}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Select one
+                    </option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </FieldShell>
+                <FieldError field="currentlyInsured" />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="householdIncome" className={labelClass}>
+                Household Income
+              </label>
+              <FieldShell icon={Wallet}>
+                <input
+                  id="householdIncome"
+                  name="householdIncome"
+                  type="text"
+                  inputMode="numeric"
+                  className={inputClass}
+                  placeholder="Approximate annual household income"
+                />
+              </FieldShell>
+            </div>
+          </fieldset>
+        )}
+
+        {quoteSlug === "employee-benefits" && (
+          <fieldset className="space-y-5 border-t border-[var(--color-rule)] pt-5">
+            <legend className="mb-1 text-[0.85rem] font-semibold uppercase tracking-wide text-[var(--color-ink-60)]">
+              Business & Group Details
+            </legend>
+
+            <div>
+              <label htmlFor="businessName" className={labelClass}>
+                Business Name *
+              </label>
+              <FieldShell icon={Building2}>
+                <input
+                  id="businessName"
+                  name="businessName"
+                  type="text"
+                  required
+                  aria-required="true"
+                  className={fieldClass("businessName")}
+                />
+              </FieldShell>
+              <FieldError field="businessName" />
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="numEmployees" className={labelClass}>
+                  Number of Employees *
+                </label>
+                <FieldShell icon={Hash}>
+                  <input
+                    id="numEmployees"
+                    name="numEmployees"
+                    type="number"
+                    min={1}
+                    required
+                    aria-required="true"
+                    className={fieldClass("numEmployees")}
+                  />
+                </FieldShell>
+                <FieldError field="numEmployees" />
+              </div>
+              <div>
+                <label htmlFor="industry" className={labelClass}>
+                  Industry *
+                </label>
+                <FieldShell icon={Briefcase}>
+                  <input id="industry" name="industry" type="text" required aria-required="true" className={fieldClass("industry")} />
+                </FieldShell>
+                <FieldError field="industry" />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="currentCarrier" className={labelClass}>
+                Current Carrier (if any)
+              </label>
+              <FieldShell icon={Shield}>
+                <input id="currentCarrier" name="currentCarrier" type="text" className={inputClass} />
+              </FieldShell>
+            </div>
+
+            <fieldset>
+              <legend className={labelClass}>Benefits of Interest</legend>
+              <div className="flex flex-wrap gap-x-5 gap-y-2">
+                {BENEFITS_OF_INTEREST.map((b) => (
+                  <label key={b} className="flex items-center gap-2 text-[0.92rem]">
+                    <input type="checkbox" name={`benefit-${b}`} className="h-4 w-4 accent-[var(--color-insure)]" />
+                    {b}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </fieldset>
+        )}
+
+        {quoteSlug === "dental-vision" && (
+          <fieldset className="space-y-5 border-t border-[var(--color-rule)] pt-5">
+            <legend className="mb-1 text-[0.85rem] font-semibold uppercase tracking-wide text-[var(--color-ink-60)]">
+              Dental &amp; Vision Details
+            </legend>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="applicantType" className={labelClass}>
+                  Who Needs Coverage? *
+                </label>
+                <FieldShell icon={Users}>
+                  <select
+                    id="applicantType"
+                    name="applicantType"
+                    required
+                    aria-required="true"
+                    className={fieldClass("applicantType")}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Select one
+                    </option>
+                    <option value="Individual">Individual</option>
+                    <option value="Family">Family</option>
+                  </select>
+                </FieldShell>
+                <FieldError field="applicantType" />
+              </div>
+              <div>
+                <label htmlFor="numPeople" className={labelClass}>
+                  Number of People *
+                </label>
+                <FieldShell icon={Hash}>
+                  <input
+                    id="numPeople"
+                    name="numPeople"
+                    type="number"
+                    min={1}
+                    required
+                    aria-required="true"
+                    className={fieldClass("numPeople")}
+                  />
+                </FieldShell>
+                <FieldError field="numPeople" />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="coverageInterest" className={labelClass}>
+                Coverage Interested In *
+              </label>
+              <FieldShell icon={Smile}>
+                <select
+                  id="coverageInterest"
+                  name="coverageInterest"
+                  required
+                  aria-required="true"
+                  className={fieldClass("coverageInterest")}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Select one
+                  </option>
+                  <option value="Dental">Dental</option>
+                  <option value="Vision">Vision</option>
+                  <option value="Both">Both</option>
+                </select>
+              </FieldShell>
+              <FieldError field="coverageInterest" />
+            </div>
+          </fieldset>
+        )}
+      </div>
 
       <div>
-        <label htmlFor="message" className={labelClass}>
-          Message / Additional Information
+        <label htmlFor="notes" className={labelClass}>
+          Additional Notes
         </label>
-        <FieldShell icon={MessageSquare} align="top">
-          <textarea id="message" name="message" rows={4} className={inputClass} />
+        <FieldShell icon={MessageCircle} align="top">
+          <textarea id="notes" name="notes" rows={4} className={inputClass} />
         </FieldShell>
       </div>
 

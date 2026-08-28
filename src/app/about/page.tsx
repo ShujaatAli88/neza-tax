@@ -8,18 +8,15 @@ import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { IconBadge } from "@/components/ui/IconBadge";
 import { PageHeader } from "@/components/content/PageHeader";
 import { PhotoFeatureBlock } from "@/components/content/PhotoFeatureBlock";
-import { InsuranceDisclosure } from "@/components/compliance/InsuranceDisclosure";
-import { MortgageDisclosure } from "@/components/compliance/MortgageDisclosure";
 import { JsonLd, personSchema, breadcrumbSchema } from "@/lib/schema";
 import { ABOUT_CONTENT } from "@/content/about";
-import { telHref } from "@/lib/contact";
 
 const HELP_ICONS = [Calculator, Landmark, Umbrella, Home];
 
 // Bolds the client-specified phrase within a specific founder-bio paragraph
 // (by 0-based index) without embedding markup in the plain-text content file.
 const FOUNDER_BOLD: Record<number, string> = {
-  0: "tax services, business services, life and health insurance, and mortgage lending",
+  0: "tax services, business services, insurance and retirement solutions, and mortgage lending",
   3: "Mortgage Loan Originator with C2 Financial Corporation",
 };
 
@@ -137,7 +134,7 @@ export default function AboutPage() {
       <section className="section bg-[var(--color-chrome)] text-[var(--color-eggshell)]">
         <Container className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-[var(--color-eggshell)]">Ready to Get Started?</h2>
+            <h2 className="text-[var(--color-eggshell)]">Have Questions? We&rsquo;re Here to Help.</h2>
             <p className="prose-measure mt-3 text-[var(--color-chrome-muted)]">
               Whether you need help with <strong>Tax Services</strong>, <strong>Business Services</strong>,{" "}
               <strong>Insurance</strong>, or <strong>Mortgage Loans</strong>, we&rsquo;re here to help.
@@ -145,27 +142,9 @@ export default function AboutPage() {
           </div>
           <div className="flex shrink-0 flex-wrap gap-4">
             <Button href="/contact" variant="invert">
-              Request an Appointment
-            </Button>
-            <Button href={telHref()} variant="onChrome">
               Contact Us
             </Button>
           </div>
-        </Container>
-      </section>
-
-      <section className="band-ledger py-10">
-        <Container>
-          <SectionEyebrow className="mb-4">Licensing &amp; Disclosures</SectionEyebrow>
-          <p className="mb-4 text-[0.85rem] text-[var(--color-ink-60)]">
-            Tax preparation services provided by experienced, CTEC-registered tax preparers.
-          </p>
-          <InsuranceDisclosure className="mb-4" />
-          <MortgageDisclosure />
-          <p className="mt-4 text-[0.8rem] text-[var(--color-ink-60)]">
-            This website is independently owned and maintained. It is not maintained by, or
-            affiliated with, Covered California.
-          </p>
         </Container>
       </section>
     </>

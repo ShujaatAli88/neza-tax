@@ -3,7 +3,9 @@ import { BUSINESS } from "@/config/business";
 
 export const runtime = "nodejs";
 
-const QUOTE_TYPES = ["Life Insurance", "Health Insurance", "Employee Benefits"];
+// Kept in sync with QUOTE_TYPES (by slug) in QuoteForm.tsx. Medicare is
+// deliberately absent — Medicare inquiries only go through the scheduler.
+const QUOTE_TYPES = ["Life Insurance", "Health Insurance", "Employee Benefits", "Dental & Vision"];
 
 // Best-effort in-memory rate limit — see the same note in api/contact/route.ts.
 const submissions = new Map<string, number[]>();
@@ -20,6 +22,10 @@ function isRateLimited(ip: string): boolean {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ZIP_RE = /^\d{5}(-\d{4})?$/;
+
+function str(body: Record<string, unknown>, key: string): string {
+  return typeof body[key] === "string" ? (body[key] as string).trim() : "";
+}
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
@@ -43,19 +49,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim() : "";
-  const quoteType = typeof body.quoteType === "string" ? body.quoteType.trim() : "";
-  const dateOfBirth = typeof body.dateOfBirth === "string" ? body.dateOfBirth.trim() : "";
-  const zip = typeof body.zip === "string" ? body.zip.trim() : "";
-  const healthConditions = typeof body.healthConditions === "string" ? body.healthConditions.trim() : "";
-  const householdIncome = typeof body.householdIncome === "string" ? body.householdIncome.trim() : "";
-  const message = typeof body.message === "string" ? body.message.trim() : "";
+  const quoteType = str(body, "quoteType");
+  const firstName = str(body, "firstName");
+  const lastName = str(body, "lastName");
+  const email = str(body, "email");
+  const phone = str(body, "phone");
+  const zip = str(body, "zip");
+  const preferredContact = str(body, "preferredContact");
+  const notes = str(body, "notes");
 
-  if (!name || !phone || !email || !quoteType || !dateOfBirth || !zip) {
+  // Shared fields required for every quote type.
+  if (!firstName || !lastName || !phone || !email || !quoteType || !zip || !preferredContact) {
     return NextResponse.json(
-      { ok: false, error: "Name, phone, email, quote type, date of birth, and ZIP code are required." },
+      { ok: false, error: "Please fill in all required fields." },
       { status: 400 },
     );
   }
@@ -72,26 +78,88 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Enter a valid ZIP code." }, { status: 400 });
   }
 
-  const destination = process.env.CONTACT_TO_EMAIL || BUSINESS.email;
-
   const payload: Record<string, string> = {
-    Name: name,
+    "Quote Type": quoteType,
+    "First Name": firstName,
+    "Last Name": lastName,
     Phone: phone,
     Email: email,
-    "Quote Type": quoteType,
-    "Date of Birth": dateOfBirth,
     "ZIP Code": zip,
+    "Preferred Contact Method": preferredContact,
   };
+
+  // Type-specific fields and their own required checks — a request for one
+  // quote type is never blocked by fields that only apply to a different one.
   if (quoteType === "Life Insurance") {
-    payload["Health Conditions"] = healthConditions || "(none provided)";
+    const dateOfBirth = str(body, "dateOfBirth");
+    const tobaccoUse = str(body, "tobaccoUse");
+    if (!dateOfBirth || !tobaccoUse) {
+      return NextResponse.json(
+        { ok: false, error: "Date of birth and tobacco use are required for a life insurance quote." },
+        { status: 400 },
+      );
+    }
+    payload["Date of Birth"] = dateOfBirth;
+    payload["Tobacco Use"] = tobaccoUse;
+    payload["Height"] = str(body, "height") || "(not provided)";
+    payload["Weight"] = str(body, "weight") || "(not provided)";
+    payload["Existing Health Conditions"] = str(body, "existingConditions") || "(none provided)";
+    payload["Desired Coverage Amount"] = str(body, "coverageAmount") || "(not provided)";
+    payload["Term Desired"] = str(body, "termDesired") || "(not provided)";
   }
+
   if (quoteType === "Health Insurance") {
-    payload["Household Income"] = householdIncome || "(none provided)";
+    const householdSize = str(body, "householdSize");
+    const currentlyInsured = str(body, "currentlyInsured");
+    if (!householdSize || !currentlyInsured) {
+      return NextResponse.json(
+        { ok: false, error: "Household size and current coverage status are required for a health insurance quote." },
+        { status: 400 },
+      );
+    }
+    payload["Household Size"] = householdSize;
+    payload["Currently Insured"] = currentlyInsured;
+    payload["Household Income"] = str(body, "householdIncome") || "(none provided)";
   }
-  payload["Message"] = message || "(none)";
+
+  if (quoteType === "Employee Benefits") {
+    const businessName = str(body, "businessName");
+    const numEmployees = str(body, "numEmployees");
+    const industry = str(body, "industry");
+    if (!businessName || !numEmployees || !industry) {
+      return NextResponse.json(
+        { ok: false, error: "Business name, number of employees, and industry are required for an employee benefits quote." },
+        { status: 400 },
+      );
+    }
+    payload["Business Name"] = businessName;
+    payload["Number of Employees"] = numEmployees;
+    payload["Industry"] = industry;
+    payload["Current Carrier"] = str(body, "currentCarrier") || "(none)";
+    payload["Benefits of Interest"] = str(body, "benefitsOfInterest") || "(none selected)";
+  }
+
+  if (quoteType === "Dental & Vision") {
+    const applicantType = str(body, "applicantType");
+    const numPeople = str(body, "numPeople");
+    const coverageInterest = str(body, "coverageInterest");
+    if (!applicantType || !numPeople || !coverageInterest) {
+      return NextResponse.json(
+        { ok: false, error: "Please complete the dental & vision coverage details." },
+        { status: 400 },
+      );
+    }
+    payload["Who Needs Coverage"] = applicantType;
+    payload["Number of People"] = numPeople;
+    payload["Coverage Interested In"] = coverageInterest;
+  }
+
+  payload["Notes"] = notes || "(none)";
   payload["_subject"] = `New insurance quote request — ${quoteType}`;
   payload["_template"] = "table";
   payload["_captcha"] = "false";
+
+  const destination = process.env.CONTACT_TO_EMAIL || BUSINESS.email;
 
   try {
     const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(destination)}`, {

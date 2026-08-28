@@ -69,6 +69,7 @@ export function Footer() {
                     href={l.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={l.ariaLabel}
                     className="text-[var(--color-chrome-muted)] hover:text-[var(--color-eggshell)]"
                   >
                     {l.label}
